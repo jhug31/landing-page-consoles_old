@@ -1,16 +1,70 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import Header from "@/components/Header";
 import { Separator } from "@/components/ui/separator";
 import { Mail } from "lucide-react";
 import ProductCard from "@/components/ProductCard";
+import { supabase } from "@/integrations/supabase/client";
+
+interface FileObject {
+  name: string;
+  signedUrl: string;
+}
 
 const IndexCopy = () => {
+  const [files, setFiles] = useState<FileObject[]>([]);
   const [loading, setLoading] = useState(true);
 
-  // Simuler un court chargement pour la transition
-  setTimeout(() => {
-    setLoading(false);
-  }, 500);
+  useEffect(() => {
+    const fetchFiles = async () => {
+      try {
+        console.log("Fetching files from servantes-d-atelier bucket...");
+        const { data: fileList, error: listError } = await supabase
+          .storage
+          .from('servantes-d-atelier')
+          .list();
+
+        if (listError) {
+          console.error('Error listing files:', listError);
+          return;
+        }
+
+        console.log("Files found:", fileList);
+
+        // Limit to first 5 files
+        const firstFiveFiles = fileList.slice(0, 5);
+
+        const filesWithUrls = await Promise.all(
+          firstFiveFiles.map(async (file) => {
+            const { data: { signedUrl }, error: urlError } = await supabase
+              .storage
+              .from('servantes-d-atelier')
+              .createSignedUrl(file.name, 3600);
+
+            if (urlError) {
+              console.error('Error getting signed URL:', urlError);
+              return null;
+            }
+
+            console.log("Generated signed URL for file:", file.name);
+            return {
+              name: file.name,
+              signedUrl: signedUrl
+            };
+          })
+        );
+
+        const validFiles = filesWithUrls.filter((file): file is FileObject => file !== null);
+        console.log("Valid files with URLs:", validFiles);
+        setFiles(validFiles);
+      } catch (error) {
+        console.error('Error fetching files:', error);
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    fetchFiles();
+  }, []);
 
   return (
     <div className="min-h-screen flex flex-col">
@@ -33,14 +87,15 @@ const IndexCopy = () => {
         >
           {loading ? (
             Array(5).fill(null).map((_, index) => (
-              <div key={index} className="bg-industrial-700 rounded-lg p-4 flex flex-col items-center justify-center gap-4">
-                <div className="w-full aspect-square bg-industrial-600 rounded animate-pulse" />
-                <div className="w-full h-10 bg-industrial-600 rounded animate-pulse" />
-              </div>
+              <ProductCard key={index} />
             ))
           ) : (
-            Array(5).fill(null).map((_, index) => (
-              <ProductCard key={index} />
+            files.map((file, index) => (
+              <ProductCard
+                key={index}
+                imageUrl={file.signedUrl}
+                fileName={file.name}
+              />
             ))
           )}
         </div>
