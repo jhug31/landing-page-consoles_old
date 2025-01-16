@@ -30,25 +30,28 @@ const IndexCopy = () => {
 
         console.log("Files found:", fileList);
 
-        // Limit to first 5 files
-        const firstFiveFiles = fileList.slice(0, 5);
+        if (!fileList || fileList.length === 0) {
+          console.log("No files found in bucket");
+          setLoading(false);
+          return;
+        }
 
         const filesWithUrls = await Promise.all(
-          firstFiveFiles.map(async (file) => {
-            const { data: { signedUrl }, error: urlError } = await supabase
+          fileList.map(async (file) => {
+            const { data: { publicUrl }, error: urlError } = await supabase
               .storage
               .from('servantes-d-atelier')
-              .createSignedUrl(file.name, 3600);
+              .getPublicUrl(file.name);
 
             if (urlError) {
-              console.error('Error getting signed URL:', urlError);
+              console.error('Error getting public URL:', urlError);
               return null;
             }
 
-            console.log("Generated signed URL for file:", file.name);
+            console.log("Generated public URL for file:", file.name, publicUrl);
             return {
               name: file.name,
-              signedUrl: signedUrl
+              signedUrl: publicUrl
             };
           })
         );
