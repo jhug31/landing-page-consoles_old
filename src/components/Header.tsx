@@ -1,5 +1,5 @@
 import { Link, useLocation } from "react-router-dom";
-import { Menu, X, Copy } from "lucide-react";
+import { Menu, X, File } from "lucide-react";
 import { useState } from "react";
 
 const Header = () => {
@@ -59,8 +59,8 @@ const Header = () => {
               onClick={() => setIsMenuOpen(false)}
             >
               <div className="flex items-center gap-2">
-                <Copy className="h-4 w-4" />
-                <span>Copie</span>
+                <File className="h-4 w-4" />
+                <span>Servantes d'atelier</span>
               </div>
             </Link>
           </li>
