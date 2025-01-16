@@ -38,22 +38,20 @@ const IndexCopy = () => {
 
         const filesWithUrls = await Promise.all(
           fileList.map(async (file) => {
-            const { data } = supabase
+            const { data: { publicUrl } } = supabase
               .storage
               .from('servantes-d-atelier')
               .getPublicUrl(file.name);
 
-            console.log("Generated public URL for file:", file.name, data.publicUrl);
             return {
               name: file.name,
-              signedUrl: data.publicUrl
+              signedUrl: publicUrl
             };
           })
         );
 
-        const validFiles = filesWithUrls.filter((file): file is FileObject => file !== null);
-        console.log("Valid files with URLs:", validFiles);
-        setFiles(validFiles);
+        console.log("Generated URLs:", filesWithUrls);
+        setFiles(filesWithUrls);
       } catch (error) {
         console.error('Error fetching files:', error);
       } finally {
