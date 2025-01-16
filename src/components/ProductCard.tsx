@@ -36,11 +36,6 @@ const ProductCard = ({ imageUrl, fileName }: ProductCardProps) => {
         )}
         {isLoading && <div className="animate-pulse w-full h-full bg-industrial-500" />}
       </div>
-      {fileName && (
-        <p className="text-sm text-gray-300 text-center mt-2">
-          {fileName.replace(/\.[^/.]+$/, "")}
-        </p>
-      )}
       <Input
         type="url"
         placeholder="Entrez l'URL du produit"
