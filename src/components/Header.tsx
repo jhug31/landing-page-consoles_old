@@ -16,7 +16,7 @@ const Header = () => {
         {/* Hamburger button */}
         <button 
           onClick={toggleMenu}
-          className="md:hidden text-white hover:text-gray-300 transition-colors"
+          className="md:hidden text-white hover:text-gray-300 transition-colors ml-auto block"
           aria-label={isMenuOpen ? "Fermer le menu" : "Ouvrir le menu"}
         >
           {isMenuOpen ? (
@@ -34,13 +34,14 @@ const Header = () => {
           md:justify-end font-medium text-[13px] tracking-[0.1em]
           absolute md:relative 
           top-12 md:top-0 
-          left-0 md:left-auto
-          w-full md:w-auto
+          right-0 md:right-auto
+          w-48 md:w-auto
           bg-industrial-900/95 md:bg-transparent
           p-4 md:p-0
           rounded-lg md:rounded-none
           backdrop-blur-sm md:backdrop-blur-none
           border border-white/10 md:border-none
+          text-right md:text-left
         `}>
           <li>
             <Link 
