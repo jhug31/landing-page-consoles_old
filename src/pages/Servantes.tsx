@@ -27,8 +27,11 @@ const Servantes = () => {
           return;
         }
 
+        // Limit to first 5 files
+        const firstFiveFiles = fileList.slice(0, 5);
+
         const filesWithUrls = await Promise.all(
-          fileList.map(async (file) => {
+          firstFiveFiles.map(async (file) => {
             const { data: { signedUrl }, error: urlError } = await supabase
               .storage
               .from('servantes-d-atelier')
@@ -77,7 +80,7 @@ const Servantes = () => {
           style={{ animationDelay: "0.2s" }}
         >
           {loading ? (
-            Array(9).fill(null).map((_, index) => (
+            Array(5).fill(null).map((_, index) => (
               <ProductCard key={index} />
             ))
           ) : (
