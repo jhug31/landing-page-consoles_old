@@ -46,6 +46,7 @@ const ProductCard = ({ imageUrl, fileName }: ProductCardProps) => {
             className="w-full h-full object-contain"
             onLoad={handleImageLoad}
             onError={handleImageError}
+            loading="lazy"
           />
         )}
         {isLoading && <div className="animate-pulse w-full h-full bg-industrial-500" />}

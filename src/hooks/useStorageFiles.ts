@@ -12,6 +12,8 @@ export const useStorageFiles = (bucketName: string) => {
   const [error, setError] = useState<string | null>(null);
 
   useEffect(() => {
+    let isMounted = true;
+
     const fetchFiles = async () => {
       try {
         console.log(`Fetching files from ${bucketName} bucket...`);
@@ -22,13 +24,17 @@ export const useStorageFiles = (bucketName: string) => {
 
         if (listError) {
           console.error('Error listing files:', listError);
-          setError('Erreur lors de la récupération des fichiers');
+          if (isMounted) {
+            setError('Erreur lors de la récupération des fichiers');
+          }
           return;
         }
 
         if (!fileList || fileList.length === 0) {
           console.log("No files found in bucket");
-          setFiles([]);
+          if (isMounted) {
+            setFiles([]);
+          }
           return;
         }
 
@@ -47,16 +53,26 @@ export const useStorageFiles = (bucketName: string) => {
         );
 
         console.log("Generated URLs:", filesWithUrls);
-        setFiles(filesWithUrls);
+        if (isMounted) {
+          setFiles(filesWithUrls);
+        }
       } catch (error) {
         console.error('Error fetching files:', error);
-        setError('Une erreur est survenue');
+        if (isMounted) {
+          setError('Une erreur est survenue');
+        }
       } finally {
-        setLoading(false);
+        if (isMounted) {
+          setLoading(false);
+        }
       }
     };
 
     fetchFiles();
+
+    return () => {
+      isMounted = false;
+    };
   }, [bucketName]);
 
   return { files, loading, error };

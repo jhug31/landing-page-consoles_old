@@ -22,13 +22,13 @@ const IndexCopy = () => {
         style={{ animationDelay: "0.2s" }}
       >
         {loading ? (
-          Array(5).fill(null).map((_, index) => (
-            <ProductCard key={index} />
+          Array(6).fill(null).map((_, index) => (
+            <ProductCard key={`loading-${index}`} />
           ))
         ) : (
           files.map((file, index) => (
             <ProductCard
-              key={index}
+              key={`file-${file.name}-${index}`}
               imageUrl={file.signedUrl}
               fileName={file.name}
             />
