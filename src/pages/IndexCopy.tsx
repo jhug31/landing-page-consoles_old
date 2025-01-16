@@ -38,20 +38,15 @@ const IndexCopy = () => {
 
         const filesWithUrls = await Promise.all(
           fileList.map(async (file) => {
-            const { data: { publicUrl }, error: urlError } = await supabase
+            const { data } = supabase
               .storage
               .from('servantes-d-atelier')
               .getPublicUrl(file.name);
 
-            if (urlError) {
-              console.error('Error getting public URL:', urlError);
-              return null;
-            }
-
-            console.log("Generated public URL for file:", file.name, publicUrl);
+            console.log("Generated public URL for file:", file.name, data.publicUrl);
             return {
               name: file.name,
-              signedUrl: publicUrl
+              signedUrl: data.publicUrl
             };
           })
         );
