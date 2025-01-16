@@ -1,60 +1,16 @@
-import { useEffect, useState } from "react";
+import { useState } from "react";
 import Header from "@/components/Header";
 import { Separator } from "@/components/ui/separator";
-import { supabase } from "@/integrations/supabase/client";
 import { Mail } from "lucide-react";
-
-interface FileObject {
-  name: string;
-  signedUrl: string;
-}
+import ProductCard from "@/components/ProductCard";
 
 const IndexCopy = () => {
-  const [files, setFiles] = useState<FileObject[]>([]);
   const [loading, setLoading] = useState(true);
 
-  useEffect(() => {
-    const fetchFiles = async () => {
-      try {
-        const { data: fileList, error: listError } = await supabase
-          .storage
-          .from('coffres-a-outils')
-          .list();
-
-        if (listError) {
-          console.error('Error listing files:', listError);
-          return;
-        }
-
-        const filesWithUrls = await Promise.all(
-          fileList.slice(0, 5).map(async (file) => {
-            const { data: { signedUrl }, error: urlError } = await supabase
-              .storage
-              .from('coffres-a-outils')
-              .createSignedUrl(file.name, 3600);
-
-            if (urlError) {
-              console.error('Error getting signed URL:', urlError);
-              return null;
-            }
-
-            return {
-              name: file.name,
-              signedUrl: signedUrl
-            };
-          })
-        );
-
-        setFiles(filesWithUrls.filter((file): file is FileObject => file !== null));
-      } catch (error) {
-        console.error('Error fetching files:', error);
-      } finally {
-        setLoading(false);
-      }
-    };
-
-    fetchFiles();
-  }, []);
+  // Simuler un court chargement pour la transition
+  setTimeout(() => {
+    setLoading(false);
+  }, 500);
 
   return (
     <div className="min-h-screen flex flex-col">
@@ -83,21 +39,8 @@ const IndexCopy = () => {
               </div>
             ))
           ) : (
-            files.map((file, index) => (
-              <div key={index} className="bg-industrial-700 rounded-lg p-4 flex flex-col items-center justify-center gap-4">
-                <div className="w-full aspect-square bg-industrial-600 rounded flex items-center justify-center overflow-hidden">
-                  <img 
-                    src={file.signedUrl} 
-                    alt={file.name} 
-                    className="w-full h-full object-contain"
-                  />
-                </div>
-                <input
-                  type="url"
-                  placeholder="Entrez l'URL du produit"
-                  className="w-full text-sm bg-industrial-600 border border-industrial-500 rounded text-gray-300 placeholder:text-gray-500 px-3 py-2"
-                />
-              </div>
+            Array(5).fill(null).map((_, index) => (
+              <ProductCard key={index} />
             ))
           )}
         </div>
