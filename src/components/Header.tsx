@@ -1,6 +1,8 @@
-import { Link } from "react-router-dom";
+import { Link, useLocation } from "react-router-dom";
 
 const Header = () => {
+  const location = useLocation();
+
   return (
     <header className="fixed top-0 left-0 w-full p-4 z-10 bg-transparent">
       <nav>
@@ -8,7 +10,8 @@ const Header = () => {
           <li>
             <Link 
               to="/" 
-              className="text-white hover:text-gray-300 transition-colors"
+              className={`relative text-white hover:text-gray-300 transition-colors
+                ${location.pathname === "/" ? "after:absolute after:bottom-[-4px] after:left-0 after:w-full after:h-[1px] after:bg-white after:transform after:scale-x-100 after:transition-transform after:duration-300" : "after:absolute after:bottom-[-4px] after:left-0 after:w-full after:h-[1px] after:bg-white after:transform after:scale-x-0 hover:after:scale-x-100 after:transition-transform after:duration-300"}`}
             >
               Coffres à outils
             </Link>
@@ -16,7 +19,8 @@ const Header = () => {
           <li>
             <Link 
               to="/servantes" 
-              className="text-white hover:text-gray-300 transition-colors"
+              className={`relative text-white hover:text-gray-300 transition-colors
+                ${location.pathname === "/servantes" ? "after:absolute after:bottom-[-4px] after:left-0 after:w-full after:h-[1px] after:bg-white after:transform after:scale-x-100 after:transition-transform after:duration-300" : "after:absolute after:bottom-[-4px] after:left-0 after:w-full after:h-[1px] after:bg-white after:transform after:scale-x-0 hover:after:scale-x-100 after:transition-transform after:duration-300"}`}
             >
               Servantes d'atelier
             </Link>
