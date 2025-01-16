@@ -16,7 +16,6 @@ const Index = () => {
   useEffect(() => {
     const fetchFiles = async () => {
       try {
-        // List all files in the bucket
         const { data: fileList, error: listError } = await supabase
           .storage
           .from('coffres-a-outils')
@@ -27,13 +26,12 @@ const Index = () => {
           return;
         }
 
-        // Get signed URLs for each file
         const filesWithUrls = await Promise.all(
           fileList.map(async (file) => {
             const { data: { signedUrl }, error: urlError } = await supabase
               .storage
               .from('coffres-a-outils')
-              .createSignedUrl(file.name, 3600); // URL valid for 1 hour
+              .createSignedUrl(file.name, 3600);
 
             if (urlError) {
               console.error('Error getting signed URL:', urlError);
@@ -59,10 +57,10 @@ const Index = () => {
   }, []);
 
   return (
-    <div className="min-h-screen flex flex-col relative">
+    <div className="min-h-screen flex flex-col">
       <Header />
       
-      <main className="flex-1 container mx-auto px-4 flex flex-col justify-center">
+      <main className="flex-1 container mx-auto px-4 pt-32 flex flex-col">
         <div className="text-left mb-32 animate-fadeIn">
           <h1 className="text-4xl md:text-5xl font-light mb-4 tracking-wide">
             Coffres à outils
