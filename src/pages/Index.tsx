@@ -22,6 +22,9 @@ const Index = () => {
           <ProductCard />
           <ProductCard />
           <ProductCard />
+          <ProductCard />
+          <ProductCard />
+          <ProductCard />
         </div>
       </main>
     </div>
