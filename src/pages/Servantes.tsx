@@ -17,6 +17,7 @@ const Servantes = () => {
   useEffect(() => {
     const fetchFiles = async () => {
       try {
+        console.log("Fetching files from servantes-d-atelier bucket...");
         const { data: fileList, error: listError } = await supabase
           .storage
           .from('servantes-d-atelier')
@@ -26,6 +27,8 @@ const Servantes = () => {
           console.error('Error listing files:', listError);
           return;
         }
+
+        console.log("Files found:", fileList);
 
         // Limit to first 5 files
         const firstFiveFiles = fileList.slice(0, 5);
@@ -42,6 +45,7 @@ const Servantes = () => {
               return null;
             }
 
+            console.log("Generated signed URL for file:", file.name);
             return {
               name: file.name,
               signedUrl: signedUrl
@@ -49,7 +53,9 @@ const Servantes = () => {
           })
         );
 
-        setFiles(filesWithUrls.filter((file): file is FileObject => file !== null));
+        const validFiles = filesWithUrls.filter((file): file is FileObject => file !== null);
+        console.log("Valid files with URLs:", validFiles);
+        setFiles(validFiles);
       } catch (error) {
         console.error('Error fetching files:', error);
       } finally {
