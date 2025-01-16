@@ -4,7 +4,7 @@ const Header = () => {
   return (
     <header className="fixed top-0 left-0 w-full p-4 z-10 bg-transparent">
       <nav>
-        <ul className="flex space-x-8 text-sm font-light tracking-wider">
+        <ul className="flex space-x-8 text-sm font-light tracking-wider justify-end">
           <li>
             <Link 
               to="/" 
