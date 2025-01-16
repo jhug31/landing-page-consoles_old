@@ -1,8 +1,63 @@
+import { useEffect, useState } from "react";
 import Header from "@/components/Header";
 import ProductCard from "@/components/ProductCard";
 import { Separator } from "@/components/ui/separator";
+import { supabase } from "@/integrations/supabase/client";
+
+interface FileObject {
+  name: string;
+  signedUrl: string;
+}
 
 const Index = () => {
+  const [files, setFiles] = useState<FileObject[]>([]);
+  const [loading, setLoading] = useState(true);
+
+  useEffect(() => {
+    const fetchFiles = async () => {
+      try {
+        // List all files in the bucket
+        const { data: fileList, error: listError } = await supabase
+          .storage
+          .from('coffres-a-outils')
+          .list();
+
+        if (listError) {
+          console.error('Error listing files:', listError);
+          return;
+        }
+
+        // Get signed URLs for each file
+        const filesWithUrls = await Promise.all(
+          fileList.map(async (file) => {
+            const { data: { signedUrl }, error: urlError } = await supabase
+              .storage
+              .from('coffres-a-outils')
+              .createSignedUrl(file.name, 3600); // URL valid for 1 hour
+
+            if (urlError) {
+              console.error('Error getting signed URL:', urlError);
+              return null;
+            }
+
+            return {
+              name: file.name,
+              signedUrl: signedUrl
+            };
+          })
+        );
+
+        setFiles(filesWithUrls.filter((file): file is FileObject => file !== null));
+      } catch (error) {
+        console.error('Error fetching files:', error);
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    fetchFiles();
+  }, []);
+
   return (
     <div className="min-h-screen flex flex-col relative">
       <Header />
@@ -18,13 +73,23 @@ const Index = () => {
           </p>
         </div>
 
-        <div className="w-full grid grid-cols-1 md:grid-cols-3 gap-8 max-w-6xl mx-auto animate-fadeIn" style={{ animationDelay: "0.2s" }}>
-          <ProductCard />
-          <ProductCard />
-          <ProductCard />
-          <ProductCard />
-          <ProductCard />
-          <ProductCard />
+        <div 
+          className="w-full grid grid-cols-1 md:grid-cols-3 gap-8 max-w-6xl mx-auto animate-fadeIn" 
+          style={{ animationDelay: "0.2s" }}
+        >
+          {loading ? (
+            Array(9).fill(null).map((_, index) => (
+              <ProductCard key={index} />
+            ))
+          ) : (
+            files.map((file, index) => (
+              <ProductCard
+                key={index}
+                imageUrl={file.signedUrl}
+                fileName={file.name}
+              />
+            ))
+          )}
         </div>
       </main>
     </div>
