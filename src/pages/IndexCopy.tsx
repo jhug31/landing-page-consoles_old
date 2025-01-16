@@ -27,7 +27,7 @@ const IndexCopy = () => {
         }
 
         const filesWithUrls = await Promise.all(
-          fileList.map(async (file) => {
+          fileList.slice(0, 5).map(async (file) => {
             const { data: { signedUrl }, error: urlError } = await supabase
               .storage
               .from('coffres-a-outils')
@@ -76,7 +76,7 @@ const IndexCopy = () => {
           style={{ animationDelay: "0.2s" }}
         >
           {loading ? (
-            Array(9).fill(null).map((_, index) => (
+            Array(5).fill(null).map((_, index) => (
               <div key={index} className="bg-industrial-700 rounded-lg p-4 flex flex-col items-center justify-center gap-4">
                 <div className="w-full aspect-square bg-industrial-600 rounded animate-pulse" />
                 <div className="w-full h-10 bg-industrial-600 rounded animate-pulse" />
