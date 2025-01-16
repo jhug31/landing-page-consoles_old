@@ -13,21 +13,18 @@ const Header = () => {
   return (
     <header className="fixed top-0 left-0 w-full p-4 z-10 bg-transparent">
       <nav className="relative">
-        {/* Hamburger button with navigation label */}
-        <div className="md:hidden flex items-center justify-end gap-2">
-          <span className="text-white text-sm">Navigation :</span>
-          <button 
-            onClick={toggleMenu}
-            className="text-white hover:text-gray-300 transition-colors block"
-            aria-label={isMenuOpen ? "Fermer le menu" : "Ouvrir le menu"}
-          >
-            {isMenuOpen ? (
-              <X className="h-6 w-6" />
-            ) : (
-              <Menu className="h-6 w-6" />
-            )}
-          </button>
-        </div>
+        {/* Hamburger button */}
+        <button 
+          onClick={toggleMenu}
+          className="md:hidden text-white hover:text-gray-300 transition-colors ml-auto block"
+          aria-label={isMenuOpen ? "Fermer le menu" : "Ouvrir le menu"}
+        >
+          {isMenuOpen ? (
+            <X className="h-6 w-6" />
+          ) : (
+            <Menu className="h-6 w-6" />
+          )}
+        </button>
 
         {/* Menu items */}
         <ul className={`
