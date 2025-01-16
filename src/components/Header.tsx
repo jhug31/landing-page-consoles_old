@@ -20,9 +20,9 @@ const Header = () => {
           aria-label={isMenuOpen ? "Fermer le menu" : "Ouvrir le menu"}
         >
           {isMenuOpen ? (
-            <X className="h-6 w-6" />
+            <X className="h-8 w-8" />
           ) : (
-            <Menu className="h-6 w-6" />
+            <Menu className="h-8 w-8" />
           )}
         </button>
 
