@@ -1,17 +1,19 @@
 import Header from "@/components/Header";
 import ProductCard from "@/components/ProductCard";
+import { Separator } from "@/components/ui/separator";
 
 const Index = () => {
   return (
     <div className="min-h-screen flex flex-col relative">
       <Header />
       
-      <main className="flex-1 container mx-auto px-4 flex flex-col justify-center items-center">
-        <div className="text-center mb-32 animate-fadeIn">
-          <h1 className="text-6xl md:text-7xl font-light mb-6 tracking-wide">
+      <main className="flex-1 container mx-auto px-4 flex flex-col justify-center">
+        <div className="text-left mb-32 animate-fadeIn">
+          <h1 className="text-4xl md:text-5xl font-light mb-4 tracking-wide">
             Coffres à outils
           </h1>
-          <p className="text-highlight text-xl tracking-widest">
+          <Separator className="my-4 w-16 bg-gray-600" />
+          <p className="text-gray-400 text-base tracking-widest">
             INDUSTRIAL PRODUCTS
           </p>
         </div>
