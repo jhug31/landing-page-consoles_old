@@ -63,7 +63,7 @@ const IndexCopy = () => {
       <main className="flex-1 container mx-auto px-4 pt-32 flex flex-col">
         <div className="text-left mb-32 animate-fadeIn">
           <h1 className="text-4xl md:text-5xl font-light mb-4 tracking-wide">
-            Coffres à outils
+            Servantes d'atelier
           </h1>
           <Separator className="my-4 w-16 bg-gray-600" />
           <p className="text-gray-400 text-base tracking-widest">
