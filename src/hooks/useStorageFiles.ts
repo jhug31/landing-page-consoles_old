@@ -16,14 +16,14 @@ export const useStorageFiles = (bucketName: string) => {
 
     const fetchFiles = async () => {
       try {
-        console.log(`Fetching files from ${bucketName} bucket...`);
+        console.log(`🔍 Début de la récupération des fichiers du bucket "${bucketName}"...`);
         const { data: fileList, error: listError } = await supabase
           .storage
           .from(bucketName)
           .list();
 
         if (listError) {
-          console.error('Error listing files:', listError);
+          console.error('❌ Erreur lors de la récupération des fichiers:', listError);
           if (isMounted) {
             setError('Erreur lors de la récupération des fichiers');
             setLoading(false);
@@ -32,7 +32,7 @@ export const useStorageFiles = (bucketName: string) => {
         }
 
         if (!fileList || fileList.length === 0) {
-          console.log("No files found in bucket");
+          console.log("ℹ️ Aucun fichier trouvé dans le bucket");
           if (isMounted) {
             setFiles([]);
             setLoading(false);
@@ -40,8 +40,8 @@ export const useStorageFiles = (bucketName: string) => {
           return;
         }
 
-        console.log("Files found in bucket:", fileList);
-        console.log("Number of files:", fileList.length);
+        console.log("📁 Liste des fichiers trouvés:", fileList.map(f => f.name));
+        console.log(`📊 Nombre total de fichiers: ${fileList.length}`);
 
         const filesWithUrls = fileList.map((file) => {
           const { data } = supabase
@@ -50,7 +50,7 @@ export const useStorageFiles = (bucketName: string) => {
             .getPublicUrl(file.name);
 
           const publicUrl = data.publicUrl;
-          console.log(`Generated URL for ${file.name}:`, publicUrl);
+          console.log(`🔗 URL générée pour ${file.name}:`, publicUrl);
 
           return {
             name: file.name,
@@ -58,15 +58,16 @@ export const useStorageFiles = (bucketName: string) => {
           };
         });
 
-        console.log("Final files with URLs:", filesWithUrls);
-        console.log("Number of files with URLs:", filesWithUrls.length);
+        console.log("✅ Traitement terminé");
+        console.log("📝 Liste finale des fichiers avec URLs:", filesWithUrls);
+        console.log(`📊 Nombre final de fichiers: ${filesWithUrls.length}`);
         
         if (isMounted) {
           setFiles(filesWithUrls);
           setLoading(false);
         }
       } catch (error) {
-        console.error('Error in fetchFiles:', error);
+        console.error('❌ Erreur inattendue:', error);
         if (isMounted) {
           setError('Une erreur est survenue');
           setLoading(false);
