@@ -1,5 +1,7 @@
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import { Input } from './ui/input';
+import { supabase } from "@/integrations/supabase/client";
+import { ArrowUpRight } from 'lucide-react';
 
 interface ProductCardProps {
   imageUrl?: string;
@@ -7,15 +9,41 @@ interface ProductCardProps {
 }
 
 const ProductCard = ({ imageUrl, fileName }: ProductCardProps) => {
-  const [url, setUrl] = useState('');
+  const [productUrl, setProductUrl] = useState<string | null>(null);
 
-  const handleUrlChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    setUrl(e.target.value);
-  };
+  useEffect(() => {
+    const fetchProductUrl = async () => {
+      if (!fileName) return;
+
+      // Extraire le numéro de fiche du nom de fichier
+      const fileNumber = fileName.replace(/^servante_/, '').replace('.png', '');
+      
+      try {
+        const { data, error } = await supabase
+          .from('urls_associes')
+          .select('url')
+          .eq('numero_fiche', fileNumber)
+          .maybeSingle();
+
+        if (error) {
+          console.error('Erreur lors de la récupération de l\'URL:', error);
+          return;
+        }
+
+        if (data) {
+          setProductUrl(data.url);
+        }
+      } catch (error) {
+        console.error('Erreur lors de la requête Supabase:', error);
+      }
+    };
+
+    fetchProductUrl();
+  }, [fileName]);
 
   const openUrl = () => {
-    if (url) {
-      window.open(url, '_blank');
+    if (productUrl) {
+      window.open(productUrl, '_blank');
     }
   };
 
@@ -43,13 +71,16 @@ const ProductCard = ({ imageUrl, fileName }: ProductCardProps) => {
           </div>
         )}
       </div>
-      <Input
-        type="url"
-        placeholder="Entrez l'URL du produit"
-        value={url}
-        onChange={handleUrlChange}
-        className="w-full text-sm bg-industrial-600 border-industrial-500 text-gray-300 placeholder:text-gray-500"
-      />
+      {productUrl && (
+        <a
+          href={productUrl}
+          target="_blank"
+          rel="noopener noreferrer"
+          className="w-full text-sm text-gray-300 hover:text-white flex items-center justify-center gap-2 transition-colors"
+        >
+          Voir sur Vynckier <ArrowUpRight className="w-4 h-4" />
+        </a>
+      )}
     </div>
   );
 };
