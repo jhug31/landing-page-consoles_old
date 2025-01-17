@@ -17,10 +17,10 @@ const Servantes = () => {
   useEffect(() => {
     const fetchFiles = async () => {
       try {
-        console.log("Fetching files from servantes-d-atelier bucket...");
+        console.log("Fetching files from coffres-a-outils bucket...");
         const { data: fileList, error: listError } = await supabase
           .storage
-          .from('servantes-d-atelier')
+          .from('coffres-a-outils')
           .list();
 
         if (listError) {
@@ -30,32 +30,25 @@ const Servantes = () => {
 
         console.log("Files found:", fileList);
 
-        // Limit to first 5 files
-        const firstFiveFiles = fileList.slice(0, 5);
+        // Limit to first 6 files
+        const firstSixFiles = fileList.slice(0, 6);
 
         const filesWithUrls = await Promise.all(
-          firstFiveFiles.map(async (file) => {
-            const { data: { signedUrl }, error: urlError } = await supabase
+          firstSixFiles.map(async (file) => {
+            const { data: { publicUrl } } = supabase
               .storage
-              .from('servantes-d-atelier')
-              .createSignedUrl(file.name, 3600);
+              .from('coffres-a-outils')
+              .getPublicUrl(file.name);
 
-            if (urlError) {
-              console.error('Error getting signed URL:', urlError);
-              return null;
-            }
-
-            console.log("Generated signed URL for file:", file.name);
             return {
               name: file.name,
-              signedUrl: signedUrl
+              signedUrl: publicUrl
             };
           })
         );
 
-        const validFiles = filesWithUrls.filter((file): file is FileObject => file !== null);
-        console.log("Valid files with URLs:", validFiles);
-        setFiles(validFiles);
+        console.log("Files with URLs:", filesWithUrls);
+        setFiles(filesWithUrls);
       } catch (error) {
         console.error('Error fetching files:', error);
       } finally {
@@ -86,7 +79,7 @@ const Servantes = () => {
           style={{ animationDelay: "0.2s" }}
         >
           {loading ? (
-            Array(5).fill(null).map((_, index) => (
+            Array(6).fill(null).map((_, index) => (
               <ProductCard key={index} />
             ))
           ) : (
