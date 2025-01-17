@@ -41,6 +41,7 @@ export const useStorageFiles = (bucketName: string) => {
         }
 
         console.log("Files found in bucket:", fileList);
+        console.log("Number of files:", fileList.length);
 
         const filesWithUrls = fileList.map((file) => {
           const { data } = supabase
@@ -58,6 +59,7 @@ export const useStorageFiles = (bucketName: string) => {
         });
 
         console.log("Final files with URLs:", filesWithUrls);
+        console.log("Number of files with URLs:", filesWithUrls.length);
         
         if (isMounted) {
           setFiles(filesWithUrls);
