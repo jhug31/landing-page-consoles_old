@@ -48,7 +48,7 @@ const Header = () => {
                 ${location.pathname === "/" ? "after:absolute after:bottom-[-4px] after:left-0 after:w-full after:h-[1px] after:bg-white after:transform after:scale-x-100 after:transition-transform after:duration-300" : "after:absolute after:bottom-[-4px] after:left-0 after:w-full after:h-[1px] after:bg-white after:transform after:scale-x-0 hover:after:scale-x-100 after:transition-transform after:duration-300"}`}
               onClick={() => setIsMenuOpen(false)}
             >
-              Coffres à outils
+              Coffres à outils et Servantes d'atelier
             </Link>
           </li>
         </ul>
