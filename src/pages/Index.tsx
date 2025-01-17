@@ -8,8 +8,8 @@ import { Mail } from "lucide-react";
 const Index = () => {
   const { files, loading, error } = useStorageFiles('coffres-a-outils');
 
-  // Limiter à 6 fichiers
-  const limitedFiles = files.slice(0, 6);
+  // Limiter à 11 fichiers
+  const limitedFiles = files.slice(0, 11);
 
   return (
     <div className="min-h-screen flex flex-col">
@@ -31,7 +31,7 @@ const Index = () => {
           style={{ animationDelay: "0.2s" }}
         >
           {loading ? (
-            Array(6).fill(null).map((_, index) => (
+            Array(11).fill(null).map((_, index) => (
               <ProductCard key={index} />
             ))
           ) : (
