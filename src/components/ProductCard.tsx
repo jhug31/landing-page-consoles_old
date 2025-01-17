@@ -78,7 +78,7 @@ const ProductCard = ({ imageUrl, fileName }: ProductCardProps) => {
           rel="noopener noreferrer"
           className="w-full text-sm text-gray-300 hover:text-white flex items-center justify-center gap-2 transition-colors"
         >
-          Voir sur Vynckier <ArrowUpRight className="w-4 h-4" />
+          Voir fiche-produit <ArrowUpRight className="w-4 h-4" />
         </a>
       )}
     </div>
