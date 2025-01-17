@@ -43,11 +43,12 @@ export const useStorageFiles = (bucketName: string) => {
         console.log("Files found in bucket:", fileList);
 
         const filesWithUrls = fileList.map((file) => {
-          const { data: { publicUrl } } = supabase
+          const { data } = supabase
             .storage
             .from(bucketName)
             .getPublicUrl(file.name);
 
+          const publicUrl = data.publicUrl;
           console.log(`Generated URL for ${file.name}:`, publicUrl);
 
           return {

@@ -19,6 +19,8 @@ const ProductCard = ({ imageUrl, fileName }: ProductCardProps) => {
     }
   };
 
+  console.log("ProductCard rendering with imageUrl:", imageUrl);
+
   return (
     <div className="product-card bg-industrial-700 rounded-lg p-4 flex flex-col items-center justify-center gap-4">
       <div 
@@ -30,6 +32,10 @@ const ProductCard = ({ imageUrl, fileName }: ProductCardProps) => {
             src={imageUrl} 
             alt={fileName || "Produit"} 
             className="w-full h-full object-contain"
+            onError={(e) => {
+              console.error('Error loading image:', imageUrl);
+              e.currentTarget.src = '/placeholder.svg';
+            }}
           />
         ) : (
           <div className="w-full h-full bg-industrial-800 flex items-center justify-center text-gray-400">
