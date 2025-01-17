@@ -6,7 +6,7 @@ export interface FileObject {
   signedUrl: string;
 }
 
-export const useStorageFiles = (bucketName: string, filterWord?: string) => {
+export const useStorageFiles = (bucketName: string) => {
   const [files, setFiles] = useState<FileObject[]>([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
@@ -42,14 +42,7 @@ export const useStorageFiles = (bucketName: string, filterWord?: string) => {
 
         console.log("Files found in bucket:", fileList);
 
-        // Filter files if filterWord is provided
-        const filteredFileList = filterWord 
-          ? fileList.filter(file => file.name.toLowerCase().includes(filterWord.toLowerCase()))
-          : fileList;
-
-        console.log("Filtered files:", filteredFileList);
-
-        const filesWithUrls = filteredFileList.map((file) => {
+        const filesWithUrls = fileList.map((file) => {
           const { data } = supabase
             .storage
             .from(bucketName)
@@ -84,7 +77,7 @@ export const useStorageFiles = (bucketName: string, filterWord?: string) => {
     return () => {
       isMounted = false;
     };
-  }, [bucketName, filterWord]);
+  }, [bucketName]);
 
   return { files, loading, error };
 };

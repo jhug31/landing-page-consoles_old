@@ -1,8 +1,8 @@
 import { useEffect, useState } from "react";
 import Header from "@/components/Header";
 import { Separator } from "@/components/ui/separator";
+import { supabase } from "@/integrations/supabase/client";
 import { Mail } from "lucide-react";
-import { useStorageFiles } from "@/hooks/useStorageFiles";
 
 interface FileObject {
   name: string;
@@ -10,7 +10,51 @@ interface FileObject {
 }
 
 const Index = () => {
-  const { files, loading } = useStorageFiles('coffres-a-outils', 'coffre');
+  const [files, setFiles] = useState<FileObject[]>([]);
+  const [loading, setLoading] = useState(true);
+
+  useEffect(() => {
+    const fetchFiles = async () => {
+      try {
+        const { data: fileList, error: listError } = await supabase
+          .storage
+          .from('coffres-a-outils')
+          .list();
+
+        if (listError) {
+          console.error('Error listing files:', listError);
+          return;
+        }
+
+        const filesWithUrls = await Promise.all(
+          fileList.map(async (file) => {
+            const { data: { signedUrl }, error: urlError } = await supabase
+              .storage
+              .from('coffres-a-outils')
+              .createSignedUrl(file.name, 3600);
+
+            if (urlError) {
+              console.error('Error getting signed URL:', urlError);
+              return null;
+            }
+
+            return {
+              name: file.name,
+              signedUrl: signedUrl
+            };
+          })
+        );
+
+        setFiles(filesWithUrls.filter((file): file is FileObject => file !== null));
+      } catch (error) {
+        console.error('Error fetching files:', error);
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    fetchFiles();
+  }, []);
 
   return (
     <div className="min-h-screen flex flex-col">
