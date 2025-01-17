@@ -13,6 +13,7 @@ const Header = () => {
   return (
     <header className="fixed top-0 left-0 w-full p-4 z-10 bg-transparent">
       <nav className="relative">
+        {/* Hamburger button */}
         <button 
           onClick={toggleMenu}
           className="md:hidden text-white hover:text-gray-300 transition-colors ml-auto block"
@@ -25,6 +26,7 @@ const Header = () => {
           )}
         </button>
 
+        {/* Menu items */}
         <ul className={`
           ${isMenuOpen ? 'flex' : 'hidden'} 
           md:flex flex-col md:flex-row 
@@ -53,9 +55,9 @@ const Header = () => {
           </li>
           <li>
             <Link 
-              to="/copy" 
+              to="/servantes" 
               className={`relative text-white hover:text-gray-300 transition-colors block
-                ${location.pathname === "/copy" ? "after:absolute after:bottom-[-4px] after:left-0 after:w-full after:h-[1px] after:bg-white after:transform after:scale-x-100 after:transition-transform after:duration-300" : "after:absolute after:bottom-[-4px] after:left-0 after:w-full after:h-[1px] after:bg-white after:transform after:scale-x-0 hover:after:scale-x-100 after:transition-transform after:duration-300"}`}
+                ${location.pathname === "/servantes" ? "after:absolute after:bottom-[-4px] after:left-0 after:w-full after:h-[1px] after:bg-white after:transform after:scale-x-100 after:transition-transform after:duration-300" : "after:absolute after:bottom-[-4px] after:left-0 after:w-full after:h-[1px] after:bg-white after:transform after:scale-x-0 hover:after:scale-x-100 after:transition-transform after:duration-300"}`}
               onClick={() => setIsMenuOpen(false)}
             >
               Servantes d'atelier

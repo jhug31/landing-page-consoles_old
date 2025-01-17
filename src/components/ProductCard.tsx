@@ -7,6 +7,7 @@ interface ProductCardProps {
 }
 
 const ProductCard = ({ imageUrl, fileName }: ProductCardProps) => {
+  const [isLoading, setIsLoading] = useState(true);
   const [url, setUrl] = useState('');
 
   const handleUrlChange = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -25,17 +26,15 @@ const ProductCard = ({ imageUrl, fileName }: ProductCardProps) => {
         className="w-full aspect-square bg-industrial-600 rounded flex items-center justify-center overflow-hidden cursor-pointer"
         onClick={openUrl}
       >
-        {imageUrl ? (
+        {imageUrl && (
           <img 
             src={imageUrl} 
-            alt={fileName || "Produit"} 
+            alt={fileName || "Product"} 
             className="w-full h-full object-contain"
+            onLoad={() => setIsLoading(false)}
           />
-        ) : (
-          <div className="w-full h-full bg-industrial-800 flex items-center justify-center text-gray-400">
-            Produit
-          </div>
         )}
+        {isLoading && <div className="animate-pulse w-full h-full bg-industrial-500" />}
       </div>
       <Input
         type="url"

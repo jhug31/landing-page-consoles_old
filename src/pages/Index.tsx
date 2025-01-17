@@ -1,5 +1,6 @@
 import { useEffect, useState } from "react";
 import Header from "@/components/Header";
+import ProductCard from "@/components/ProductCard";
 import { Separator } from "@/components/ui/separator";
 import { supabase } from "@/integrations/supabase/client";
 import { Mail } from "lucide-react";
@@ -77,27 +78,15 @@ const Index = () => {
         >
           {loading ? (
             Array(9).fill(null).map((_, index) => (
-              <div key={index} className="bg-industrial-700 rounded-lg p-4 flex flex-col items-center justify-center gap-4">
-                <div className="w-full aspect-square bg-industrial-600 rounded animate-pulse" />
-                <div className="w-full h-10 bg-industrial-600 rounded animate-pulse" />
-              </div>
+              <ProductCard key={index} />
             ))
           ) : (
             files.map((file, index) => (
-              <div key={index} className="bg-industrial-700 rounded-lg p-4 flex flex-col items-center justify-center gap-4">
-                <div className="w-full aspect-square bg-industrial-600 rounded flex items-center justify-center overflow-hidden">
-                  <img 
-                    src={file.signedUrl} 
-                    alt={file.name} 
-                    className="w-full h-full object-contain"
-                  />
-                </div>
-                <input
-                  type="url"
-                  placeholder="Entrez l'URL du produit"
-                  className="w-full text-sm bg-industrial-600 border border-industrial-500 rounded text-gray-300 placeholder:text-gray-500 px-3 py-2"
-                />
-              </div>
+              <ProductCard
+                key={index}
+                imageUrl={file.signedUrl}
+                fileName={file.name}
+              />
             ))
           )}
         </div>
