@@ -15,10 +15,13 @@ const ProductCard = ({ imageUrl, fileName }: ProductCardProps) => {
     const fetchProductUrl = async () => {
       if (!fileName) return;
 
-      // Extraire le numéro de fiche du nom de fichier
-      const fileNumber = fileName.replace(/^servante_/, '').replace('.png', '');
-      
       try {
+        // Extraire le numéro de fiche du nom de fichier
+        let fileNumber = fileName.replace(/\.png$/, '');
+        if (fileNumber.startsWith('servante_')) {
+          fileNumber = fileNumber.replace('servante_', '');
+        }
+        
         const { data, error } = await supabase
           .from('urls_associes')
           .select('url')
@@ -46,8 +49,6 @@ const ProductCard = ({ imageUrl, fileName }: ProductCardProps) => {
       window.open(productUrl, '_blank');
     }
   };
-
-  console.log("ProductCard rendering with imageUrl:", imageUrl);
 
   return (
     <div className="product-card bg-industrial-700 rounded-lg p-4 flex flex-col items-center justify-center gap-4">
