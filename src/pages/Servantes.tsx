@@ -17,7 +17,6 @@ const Servantes = () => {
   useEffect(() => {
     const fetchFiles = async () => {
       try {
-        console.log("Fetching files from coffres-a-outils bucket...");
         const { data: fileList, error: listError } = await supabase
           .storage
           .from('coffres-a-outils')
@@ -28,29 +27,26 @@ const Servantes = () => {
           return;
         }
 
-        console.log("Files found:", fileList);
-
-        // Limit to first 6 files
-        const firstSixFiles = fileList.slice(0, 6);
-
         const filesWithUrls = await Promise.all(
-          firstSixFiles.map(async (file) => {
-            const { data } = supabase
+          fileList.map(async (file) => {
+            const { data: { signedUrl }, error: urlError } = await supabase
               .storage
               .from('coffres-a-outils')
-              .getPublicUrl(file.name);
+              .createSignedUrl(file.name, 3600);
 
-            console.log("Generated public URL for file:", file.name, data.publicUrl);
-            
+            if (urlError) {
+              console.error('Error getting signed URL:', urlError);
+              return null;
+            }
+
             return {
               name: file.name,
-              signedUrl: data.publicUrl
+              signedUrl: signedUrl
             };
           })
         );
 
-        console.log("Files with URLs:", filesWithUrls);
-        setFiles(filesWithUrls);
+        setFiles(filesWithUrls.filter((file): file is FileObject => file !== null));
       } catch (error) {
         console.error('Error fetching files:', error);
       } finally {
