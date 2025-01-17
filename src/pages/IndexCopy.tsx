@@ -7,6 +7,8 @@ import { useStorageFiles } from "@/hooks/useStorageFiles";
 const IndexCopy = () => {
   const { files, loading } = useStorageFiles('copy coffres a outils');
 
+  console.log("Files in IndexCopy:", files); // Ajout d'un log pour debug
+
   return (
     <div className="min-h-screen flex flex-col">
       <Header />

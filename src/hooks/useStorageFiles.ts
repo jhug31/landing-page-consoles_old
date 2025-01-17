@@ -26,6 +26,7 @@ export const useStorageFiles = (bucketName: string) => {
           console.error('Error listing files:', listError);
           if (isMounted) {
             setError('Erreur lors de la récupération des fichiers');
+            setLoading(false);
           }
           return;
         }
@@ -34,9 +35,12 @@ export const useStorageFiles = (bucketName: string) => {
           console.log("No files found in bucket");
           if (isMounted) {
             setFiles([]);
+            setLoading(false);
           }
           return;
         }
+
+        console.log("Files found in bucket:", fileList);
 
         const filesWithUrls = await Promise.all(
           fileList.map(async (file) => {
@@ -45,6 +49,8 @@ export const useStorageFiles = (bucketName: string) => {
               .from(bucketName)
               .getPublicUrl(file.name);
 
+            console.log(`Generated URL for ${file.name}:`, publicUrl);
+
             return {
               name: file.name,
               signedUrl: publicUrl
@@ -52,17 +58,16 @@ export const useStorageFiles = (bucketName: string) => {
           })
         );
 
-        console.log("Generated URLs:", filesWithUrls);
+        console.log("Final files with URLs:", filesWithUrls);
+        
         if (isMounted) {
           setFiles(filesWithUrls);
+          setLoading(false);
         }
       } catch (error) {
-        console.error('Error fetching files:', error);
+        console.error('Error in fetchFiles:', error);
         if (isMounted) {
           setError('Une erreur est survenue');
-        }
-      } finally {
-        if (isMounted) {
           setLoading(false);
         }
       }
