@@ -5,7 +5,7 @@ import PageTitle from "@/components/PageTitle";
 import ProductCard from "@/components/ProductCard";
 
 const IndexCopy = () => {
-  const { files, loading } = useStorageFiles('coffres-a-outils');
+  const { files, loading } = useStorageFiles('copy coffres a outils');
 
   return (
     <div className="min-h-screen flex flex-col">
