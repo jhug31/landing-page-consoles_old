@@ -51,6 +51,16 @@ const Header = () => {
               Coffres à outils
             </Link>
           </li>
+          <li>
+            <Link 
+              to="/copy" 
+              className={`relative text-white hover:text-gray-300 transition-colors block
+                ${location.pathname === "/copy" ? "after:absolute after:bottom-[-4px] after:left-0 after:w-full after:h-[1px] after:bg-white after:transform after:scale-x-100 after:transition-transform after:duration-300" : "after:absolute after:bottom-[-4px] after:left-0 after:w-full after:h-[1px] after:bg-white after:transform after:scale-x-0 hover:after:scale-x-100 after:transition-transform after:duration-300"}`}
+              onClick={() => setIsMenuOpen(false)}
+            >
+              Copy Coffres à outils
+            </Link>
+          </li>
         </ul>
       </nav>
     </header>
