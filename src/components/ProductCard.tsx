@@ -1,7 +1,12 @@
 import { useState } from 'react';
 import { Input } from './ui/input';
 
-const ProductCard = () => {
+interface ProductCardProps {
+  imageUrl?: string;
+  fileName?: string;
+}
+
+const ProductCard = ({ imageUrl, fileName }: ProductCardProps) => {
   const [url, setUrl] = useState('');
 
   const handleUrlChange = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -20,9 +25,17 @@ const ProductCard = () => {
         className="w-full aspect-square bg-industrial-600 rounded flex items-center justify-center overflow-hidden cursor-pointer"
         onClick={openUrl}
       >
-        <div className="w-full h-full bg-industrial-800 flex items-center justify-center text-gray-400">
-          Produit
-        </div>
+        {imageUrl ? (
+          <img 
+            src={imageUrl} 
+            alt={fileName || "Produit"} 
+            className="w-full h-full object-contain"
+          />
+        ) : (
+          <div className="w-full h-full bg-industrial-800 flex items-center justify-center text-gray-400">
+            Produit
+          </div>
+        )}
       </div>
       <Input
         type="url"
