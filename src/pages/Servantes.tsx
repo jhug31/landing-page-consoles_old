@@ -35,14 +35,16 @@ const Servantes = () => {
 
         const filesWithUrls = await Promise.all(
           firstSixFiles.map(async (file) => {
-            const { data: { publicUrl } } = supabase
+            const { data } = supabase
               .storage
               .from('coffres-a-outils')
               .getPublicUrl(file.name);
 
+            console.log("Generated public URL for file:", file.name, data.publicUrl);
+            
             return {
               name: file.name,
-              signedUrl: publicUrl
+              signedUrl: data.publicUrl
             };
           })
         );
