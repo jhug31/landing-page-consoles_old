@@ -19,7 +19,7 @@ const Servantes = () => {
       try {
         const { data: fileList, error: listError } = await supabase
           .storage
-          .from('servantes-d-atelier')
+          .from('coffres-a-outils')
           .list();
 
         if (listError) {
@@ -31,7 +31,7 @@ const Servantes = () => {
           fileList.map(async (file) => {
             const { data: { signedUrl }, error: urlError } = await supabase
               .storage
-              .from('servantes-d-atelier')
+              .from('coffres-a-outils')
               .createSignedUrl(file.name, 3600);
 
             if (urlError) {
@@ -77,7 +77,7 @@ const Servantes = () => {
           style={{ animationDelay: "0.2s" }}
         >
           {loading ? (
-            Array(9).fill(null).map((_, index) => (
+            Array(6).fill(null).map((_, index) => (
               <ProductCard key={index} />
             ))
           ) : (
