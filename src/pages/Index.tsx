@@ -19,7 +19,7 @@ const Index = () => {
           </h1>
           <Separator className="my-4 w-16 bg-gray-600" />
           <p className="text-gray-400 text-base tracking-widest">
-            INDUSTRIAL PRODUCTS
+            COFFRES À OUTILS ET SERVANTES D'ATELIER
           </p>
         </div>
 
