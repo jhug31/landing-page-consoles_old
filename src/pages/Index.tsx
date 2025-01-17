@@ -9,12 +9,12 @@ const Index = () => {
   const { files, loading, error } = useStorageFiles('coffres-a-outils');
 
   return (
-    <div className="min-h-screen flex flex-col">
+    <div className="min-h-screen flex flex-col bg-industrial-900">
       <Header />
       
       <main className="flex-1 container mx-auto px-4 pt-32 flex flex-col">
         <div className="text-left mb-32 animate-fadeIn">
-          <h1 className="text-4xl md:text-5xl font-light mb-4 tracking-wide">
+          <h1 className="text-4xl md:text-5xl font-light mb-4 tracking-wide text-white">
             Coffres à outils
           </h1>
           <Separator className="my-4 w-16 bg-gray-600" />
@@ -23,12 +23,18 @@ const Index = () => {
           </p>
         </div>
 
+        {error && (
+          <div className="text-red-500 mb-8">
+            Une erreur est survenue lors du chargement des produits.
+          </div>
+        )}
+
         <div 
-          className="w-full grid grid-cols-1 md:grid-cols-3 gap-8 max-w-6xl mx-auto animate-fadeIn" 
+          className="w-full grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-8 max-w-7xl mx-auto animate-fadeIn" 
           style={{ animationDelay: "0.2s" }}
         >
           {loading ? (
-            Array(11).fill(null).map((_, index) => (
+            Array(12).fill(null).map((_, index) => (
               <ProductCard key={index} />
             ))
           ) : (
