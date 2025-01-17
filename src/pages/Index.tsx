@@ -28,7 +28,7 @@ const Index = () => {
           style={{ animationDelay: "0.2s" }}
         >
           {loading ? (
-            Array(7).fill(null).map((_, index) => (
+            Array(11).fill(null).map((_, index) => (
               <ProductCard key={index} />
             ))
           ) : (
