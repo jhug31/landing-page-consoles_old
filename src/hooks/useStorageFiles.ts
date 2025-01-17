@@ -42,21 +42,19 @@ export const useStorageFiles = (bucketName: string) => {
 
         console.log("Files found in bucket:", fileList);
 
-        const filesWithUrls = await Promise.all(
-          fileList.map(async (file) => {
-            const { data: { publicUrl } } = supabase
-              .storage
-              .from(bucketName)
-              .getPublicUrl(file.name);
+        const filesWithUrls = fileList.map((file) => {
+          const { data: { publicUrl } } = supabase
+            .storage
+            .from(bucketName)
+            .getPublicUrl(file.name);
 
-            console.log(`Generated URL for ${file.name}:`, publicUrl);
+          console.log(`Generated URL for ${file.name}:`, publicUrl);
 
-            return {
-              name: file.name,
-              signedUrl: publicUrl
-            };
-          })
-        );
+          return {
+            name: file.name,
+            signedUrl: publicUrl
+          };
+        });
 
         console.log("Final files with URLs:", filesWithUrls);
         
