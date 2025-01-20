@@ -50,16 +50,24 @@ const ProductCard = ({ imageUrl, fileName }: ProductCardProps) => {
 
         // Récupérer l'URL de la fiche produit depuis le bucket
         try {
-          const { data: ficheProduitData } = supabase
+          // Encode the bucket name properly
+          const bucketName = encodeURIComponent('fiches produits');
+          const { data: ficheProduitData } = await supabase
             .storage
             .from('fiches produits')
             .getPublicUrl(`${fileNumber}.png`);
 
           if (ficheProduitData?.publicUrl) {
+            // Ensure the URL is properly encoded
+            const encodedUrl = ficheProduitData.publicUrl.replace(
+              '/fiches%20produits/',
+              `/${encodeURIComponent('fiches produits')}/`
+            );
+            
             // Vérifier si l'image existe en faisant une requête HEAD
-            const response = await fetch(ficheProduitData.publicUrl, { method: 'HEAD' });
+            const response = await fetch(encodedUrl, { method: 'HEAD' });
             if (response.ok) {
-              setFicheProduitUrl(ficheProduitData.publicUrl);
+              setFicheProduitUrl(encodedUrl);
             } else {
               console.log('Fiche produit non trouvée:', fileNumber);
             }
