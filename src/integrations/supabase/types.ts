@@ -9,21 +9,7 @@ export type Json =
 export type Database = {
   public: {
     Tables: {
-      urls_associes: {
-        Row: {
-          numero_fiche: string
-          url: string
-        }
-        Insert: {
-          numero_fiche: string
-          url: string
-        }
-        Update: {
-          numero_fiche?: string
-          url?: string
-        }
-        Relationships: []
-      }
+      [_ in never]: never
     }
     Views: {
       [_ in never]: never
