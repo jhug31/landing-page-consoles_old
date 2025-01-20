@@ -22,6 +22,8 @@ const ProductCard = ({ imageUrl, fileName }: ProductCardProps) => {
           fileNumber = fileNumber.replace('servante_', '');
         }
         
+        console.log('Fetching URL for file number:', fileNumber);
+        
         const { data, error } = await supabase
           .from('urls_associes')
           .select('url')
@@ -33,13 +35,23 @@ const ProductCard = ({ imageUrl, fileName }: ProductCardProps) => {
           return;
         }
 
+        console.log('Database response:', data);
+
         if (data?.url) {
-          // Validate and sanitize URL
+          // Remove any trailing colons and validate URL
+          const cleanUrl = data.url.replace(/:$/, '').trim();
+          console.log('Cleaned URL:', cleanUrl);
+          
           try {
-            const url = new URL(data.url);
-            setProductUrl(url.toString());
+            const url = new URL(cleanUrl);
+            if (url.protocol === 'http:' || url.protocol === 'https:') {
+              console.log('Setting valid URL:', url.toString());
+              setProductUrl(url.toString());
+            } else {
+              console.error('Invalid URL protocol:', url.protocol);
+            }
           } catch (e) {
-            console.error('URL invalide:', data.url);
+            console.error('URL invalide:', cleanUrl, e);
           }
         }
       } catch (error) {
@@ -54,7 +66,11 @@ const ProductCard = ({ imageUrl, fileName }: ProductCardProps) => {
     if (productUrl) {
       try {
         const url = new URL(productUrl);
-        window.open(url.toString(), '_blank', 'noopener,noreferrer');
+        if (url.protocol === 'http:' || url.protocol === 'https:') {
+          window.open(url.toString(), '_blank', 'noopener,noreferrer');
+        } else {
+          console.error('Invalid URL protocol:', url.protocol);
+        }
       } catch (e) {
         console.error('Erreur lors de l\'ouverture de l\'URL:', e);
       }
