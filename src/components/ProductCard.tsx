@@ -1,5 +1,4 @@
 import { useEffect, useState } from 'react';
-import { Input } from './ui/input';
 import { supabase } from "@/integrations/supabase/client";
 import { ArrowUpRight } from 'lucide-react';
 
@@ -10,9 +9,10 @@ interface ProductCardProps {
 
 const ProductCard = ({ imageUrl, fileName }: ProductCardProps) => {
   const [productUrl, setProductUrl] = useState<string | null>(null);
+  const [ficheProduitUrl, setFicheProduitUrl] = useState<string | null>(null);
 
   useEffect(() => {
-    const fetchProductUrl = async () => {
+    const fetchProductData = async () => {
       if (!fileName) return;
 
       try {
@@ -22,8 +22,9 @@ const ProductCard = ({ imageUrl, fileName }: ProductCardProps) => {
           fileNumber = fileNumber.replace('servante_', '');
         }
         
-        console.log('Fetching URL for file number:', fileNumber);
+        console.log('Fetching data for file number:', fileNumber);
         
+        // Récupérer l'URL du produit
         const { data, error } = await supabase
           .from('urls_associes')
           .select('url')
@@ -35,31 +36,43 @@ const ProductCard = ({ imageUrl, fileName }: ProductCardProps) => {
           return;
         }
 
-        console.log('Database response:', data);
-
         if (data?.url) {
-          // Remove any trailing colons and validate URL
           const cleanUrl = data.url.replace(/:$/, '').trim();
-          console.log('Cleaned URL:', cleanUrl);
-          
           try {
             const url = new URL(cleanUrl);
             if (url.protocol === 'http:' || url.protocol === 'https:') {
-              console.log('Setting valid URL:', url.toString());
               setProductUrl(url.toString());
-            } else {
-              console.error('Invalid URL protocol:', url.protocol);
             }
           } catch (e) {
             console.error('URL invalide:', cleanUrl, e);
           }
         }
+
+        // Récupérer l'URL de la fiche produit depuis le bucket
+        try {
+          const { data: ficheProduitData } = supabase
+            .storage
+            .from('fiches produits')
+            .getPublicUrl(`${fileNumber}.png`);
+
+          if (ficheProduitData?.publicUrl) {
+            // Vérifier si l'image existe en faisant une requête HEAD
+            const response = await fetch(ficheProduitData.publicUrl, { method: 'HEAD' });
+            if (response.ok) {
+              setFicheProduitUrl(ficheProduitData.publicUrl);
+            } else {
+              console.log('Fiche produit non trouvée:', fileNumber);
+            }
+          }
+        } catch (error) {
+          console.error('Erreur lors de la récupération de la fiche produit:', error);
+        }
       } catch (error) {
-        console.error('Erreur lors de la requête Supabase:', error);
+        console.error('Erreur lors de la requête:', error);
       }
     };
 
-    fetchProductUrl();
+    fetchProductData();
   }, [fileName]);
 
   const openUrl = () => {
@@ -68,8 +81,6 @@ const ProductCard = ({ imageUrl, fileName }: ProductCardProps) => {
         const url = new URL(productUrl);
         if (url.protocol === 'http:' || url.protocol === 'https:') {
           window.open(url.toString(), '_blank', 'noopener,noreferrer');
-        } else {
-          console.error('Invalid URL protocol:', url.protocol);
         }
       } catch (e) {
         console.error('Erreur lors de l\'ouverture de l\'URL:', e);
@@ -88,6 +99,7 @@ const ProductCard = ({ imageUrl, fileName }: ProductCardProps) => {
             src={imageUrl} 
             alt={fileName || "Produit"} 
             className="w-full h-full object-contain"
+            loading="lazy"
             onError={(e) => {
               console.error('Error loading image:', imageUrl);
               e.currentTarget.src = '/placeholder.svg';
@@ -99,6 +111,30 @@ const ProductCard = ({ imageUrl, fileName }: ProductCardProps) => {
           </div>
         )}
       </div>
+      
+      {ficheProduitUrl && (
+        <a
+          href={productUrl || '#'}
+          target="_blank"
+          rel="noopener noreferrer"
+          className="w-full aspect-[4/3] bg-white rounded overflow-hidden hover:opacity-90 transition-opacity"
+          onClick={(e) => {
+            if (!productUrl) e.preventDefault();
+          }}
+        >
+          <img 
+            src={ficheProduitUrl}
+            alt="Fiche produit"
+            className="w-full h-full object-contain"
+            loading="lazy"
+            onError={(e) => {
+              console.error('Error loading fiche produit:', ficheProduitUrl);
+              e.currentTarget.parentElement?.classList.add('hidden');
+            }}
+          />
+        </a>
+      )}
+
       {productUrl && (
         <a
           href={productUrl}
