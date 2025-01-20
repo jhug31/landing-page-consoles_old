@@ -33,8 +33,14 @@ const ProductCard = ({ imageUrl, fileName }: ProductCardProps) => {
           return;
         }
 
-        if (data) {
-          setProductUrl(data.url);
+        if (data?.url) {
+          // Validate and sanitize URL
+          try {
+            const url = new URL(data.url);
+            setProductUrl(url.toString());
+          } catch (e) {
+            console.error('URL invalide:', data.url);
+          }
         }
       } catch (error) {
         console.error('Erreur lors de la requête Supabase:', error);
@@ -46,7 +52,12 @@ const ProductCard = ({ imageUrl, fileName }: ProductCardProps) => {
 
   const openUrl = () => {
     if (productUrl) {
-      window.open(productUrl, '_blank');
+      try {
+        const url = new URL(productUrl);
+        window.open(url.toString(), '_blank', 'noopener,noreferrer');
+      } catch (e) {
+        console.error('Erreur lors de l\'ouverture de l\'URL:', e);
+      }
     }
   };
 
