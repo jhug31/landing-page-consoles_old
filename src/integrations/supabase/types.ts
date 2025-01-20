@@ -12,17 +12,14 @@ export type Database = {
       urls_associes: {
         Row: {
           numero_fiche: string
-          "photo PNG": string | null
           url: string
         }
         Insert: {
           numero_fiche: string
-          "photo PNG"?: string | null
           url: string
         }
         Update: {
           numero_fiche?: string
-          "photo PNG"?: string | null
           url?: string
         }
         Relationships: []
