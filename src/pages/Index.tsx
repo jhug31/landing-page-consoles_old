@@ -64,22 +64,16 @@ const Index = () => {
               Demandez une offre
             </Button>
           </PopoverTrigger>
-          <PopoverContent className="w-auto p-0" align="end">
+          <PopoverContent className="w-auto p-0 rounded-xl" align="end">
             <div className="flex flex-col gap-2 p-4">
-              <a 
-                href="tel:+33123456789" 
-                className="flex items-center gap-2 text-sm px-4 py-2 hover:bg-gray-100 rounded-md transition-colors"
-              >
-                <Phone className="h-4 w-4" />
+              <div className="flex items-center gap-2 text-sm px-4 py-2 font-bold">
+                <Phone className="h-4 w-4 font-bold" strokeWidth={3} />
                 <span>+33 (0)1 23 45 67 89</span>
-              </a>
-              <a 
-                href="mailto:contact@example.com"
-                className="flex items-center gap-2 text-sm px-4 py-2 hover:bg-gray-100 rounded-md transition-colors"
-              >
-                <Mail className="h-4 w-4" />
+              </div>
+              <div className="flex items-center gap-2 text-sm px-4 py-2 font-bold">
+                <Mail className="h-4 w-4 font-bold" strokeWidth={3} />
                 <span>contact@example.com</span>
-              </a>
+              </div>
             </div>
           </PopoverContent>
         </Popover>
