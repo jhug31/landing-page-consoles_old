@@ -2,6 +2,7 @@ import Header from "@/components/Header";
 import ProductCard from "@/components/ProductCard";
 import { Separator } from "@/components/ui/separator";
 import { useStorageFiles } from "@/hooks/useStorageFiles";
+import { Mail } from "lucide-react";
 import { Button } from "@/components/ui/button";
 
 const Index = () => {
