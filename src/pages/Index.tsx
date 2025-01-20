@@ -3,6 +3,12 @@ import ProductCard from "@/components/ProductCard";
 import { Separator } from "@/components/ui/separator";
 import { useStorageFiles } from "@/hooks/useStorageFiles";
 import { Button } from "@/components/ui/button";
+import { Phone, Mail } from "lucide-react";
+import {
+  Popover,
+  PopoverContent,
+  PopoverTrigger,
+} from "@/components/ui/popover";
 
 const Index = () => {
   const { files, loading, error } = useStorageFiles('coffres-a-outils');
@@ -48,14 +54,35 @@ const Index = () => {
         </div>
       </main>
 
-      {/* Floating CTA Button */}
-      <div className="fixed bottom-8 right-8 z-50 animate-bounce">
-        <Button
-          className="bg-white hover:bg-white/90 text-[#222222] font-bold px-6 py-6 rounded-full shadow-lg transition-all duration-300 hover:scale-105"
-          onClick={() => window.open('mailto:contact@example.com')}
-        >
-          Demandez une offre
-        </Button>
+      {/* Floating CTA Button with Popover */}
+      <div className="fixed bottom-8 right-8 z-50">
+        <Popover>
+          <PopoverTrigger asChild>
+            <Button
+              className="bg-white hover:bg-white/90 text-[#222222] font-bold px-6 py-6 rounded-full shadow-lg transition-all duration-300 hover:scale-105"
+            >
+              Demandez une offre
+            </Button>
+          </PopoverTrigger>
+          <PopoverContent className="w-auto p-0" align="end">
+            <div className="flex flex-col gap-2 p-4">
+              <a 
+                href="tel:+33123456789" 
+                className="flex items-center gap-2 text-sm px-4 py-2 hover:bg-gray-100 rounded-md transition-colors"
+              >
+                <Phone className="h-4 w-4" />
+                <span>+33 (0)1 23 45 67 89</span>
+              </a>
+              <a 
+                href="mailto:contact@example.com"
+                className="flex items-center gap-2 text-sm px-4 py-2 hover:bg-gray-100 rounded-md transition-colors"
+              >
+                <Mail className="h-4 w-4" />
+                <span>contact@example.com</span>
+              </a>
+            </div>
+          </PopoverContent>
+        </Popover>
       </div>
 
       {/* Footer avec mentions légales */}
