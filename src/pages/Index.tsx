@@ -1,4 +1,3 @@
-import { useEffect, useState } from "react";
 import Header from "@/components/Header";
 import ProductCard from "@/components/ProductCard";
 import { Separator } from "@/components/ui/separator";
@@ -53,11 +52,11 @@ const Index = () => {
       {/* Floating CTA Button */}
       <div className="fixed bottom-8 right-8 z-50 animate-bounce">
         <Button
-          className="bg-highlight hover:bg-highlight/90 text-white font-medium px-6 py-6 rounded-full shadow-lg transition-all duration-300 hover:scale-105 flex items-center gap-2"
+          className="bg-white hover:bg-white/90 text-[#F97316] font-medium px-6 py-6 rounded-full shadow-lg transition-all duration-300 hover:scale-105 flex items-center gap-2"
           onClick={() => window.open('mailto:contact@example.com')}
         >
           <Mail className="h-5 w-5" />
-          Contactez-nous
+          Demandez une offre
         </Button>
       </div>
 
