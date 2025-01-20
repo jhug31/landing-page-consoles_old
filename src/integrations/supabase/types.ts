@@ -9,7 +9,24 @@ export type Json =
 export type Database = {
   public: {
     Tables: {
-      [_ in never]: never
+      urls_associes: {
+        Row: {
+          numero_fiche: string
+          "photo PNG": string | null
+          url: string
+        }
+        Insert: {
+          numero_fiche: string
+          "photo PNG"?: string | null
+          url: string
+        }
+        Update: {
+          numero_fiche?: string
+          "photo PNG"?: string | null
+          url?: string
+        }
+        Relationships: []
+      }
     }
     Views: {
       [_ in never]: never
