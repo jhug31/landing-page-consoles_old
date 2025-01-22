@@ -1,1 +1,17 @@
 project_id = "ycirkubrqgoleycnkuqo"
+
+[api]
+enabled = true
+port = 54321
+schemas = ["public", "storage"]
+
+[db]
+port = 54322
+
+[studio]
+enabled = true
+port = 54323
+
+[[functions]]
+name = "send-contact-form"
+verify_jwt = false

@@ -3,15 +3,66 @@ import ProductCard from "@/components/ProductCard";
 import { Separator } from "@/components/ui/separator";
 import { useStorageFiles } from "@/hooks/useStorageFiles";
 import { Button } from "@/components/ui/button";
-import { Phone, Mail } from "lucide-react";
-import {
-  Popover,
-  PopoverContent,
-  PopoverTrigger,
-} from "@/components/ui/popover";
+import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger } from "@/components/ui/dialog";
+import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from "@/components/ui/form";
+import { Input } from "@/components/ui/input";
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
+import { useForm } from "react-hook-form";
+import { zodResolver } from "@hookform/resolvers/zod";
+import * as z from "zod";
+import { useState } from "react";
+import { useToast } from "@/components/ui/use-toast";
+import { supabase } from "@/integrations/supabase/client";
+
+const formSchema = z.object({
+  name: z.string().min(2, "Le nom doit contenir au moins 2 caractères"),
+  email: z.string().email("Adresse email invalide"),
+  phone: z.string().optional(),
+  product: z.string().min(1, "Veuillez sélectionner un produit"),
+});
 
 const Index = () => {
   const { files, loading, error } = useStorageFiles('coffres-a-outils');
+  const [isSubmitting, setIsSubmitting] = useState(false);
+  const { toast } = useToast();
+  const [isDialogOpen, setIsDialogOpen] = useState(false);
+
+  const form = useForm<z.infer<typeof formSchema>>({
+    resolver: zodResolver(formSchema),
+    defaultValues: {
+      name: "",
+      email: "",
+      phone: "",
+      product: "",
+    },
+  });
+
+  const onSubmit = async (values: z.infer<typeof formSchema>) => {
+    setIsSubmitting(true);
+    try {
+      const { data, error } = await supabase.functions.invoke('send-contact-form', {
+        body: values,
+      });
+
+      if (error) throw error;
+
+      toast({
+        title: "Demande envoyée !",
+        description: "Nous vous répondrons sous 24h.",
+      });
+      
+      form.reset();
+      setIsDialogOpen(false);
+    } catch (error) {
+      toast({
+        title: "Erreur",
+        description: "Une erreur est survenue lors de l'envoi du formulaire.",
+        variant: "destructive",
+      });
+    } finally {
+      setIsSubmitting(false);
+    }
+  };
 
   return (
     <div className="min-h-screen flex flex-col bg-industrial-900">
@@ -54,29 +105,96 @@ const Index = () => {
         </div>
       </main>
 
-      {/* Floating CTA Button with Popover */}
+      {/* Floating CTA Button with Dialog */}
       <div className="fixed bottom-8 right-8 z-50">
-        <Popover>
-          <PopoverTrigger asChild>
+        <Dialog open={isDialogOpen} onOpenChange={setIsDialogOpen}>
+          <DialogTrigger asChild>
             <Button
               className="bg-white hover:bg-white/90 text-[#222222] font-bold px-6 py-6 rounded-full shadow-lg transition-all duration-300 hover:scale-105"
             >
               Demandez une offre
             </Button>
-          </PopoverTrigger>
-          <PopoverContent className="w-auto p-0 rounded-xl" align="end">
-            <div className="flex flex-col gap-2 p-4">
-              <div className="flex items-center gap-2 text-sm px-4 py-2 font-bold">
-                <Phone className="h-4 w-4 font-bold" strokeWidth={3} />
-                <span>+33 (0)1 23 45 67 89</span>
-              </div>
-              <div className="flex items-center gap-2 text-sm px-4 py-2 font-bold">
-                <Mail className="h-4 w-4 font-bold" strokeWidth={3} />
-                <span>contact@example.com</span>
-              </div>
-            </div>
-          </PopoverContent>
-        </Popover>
+          </DialogTrigger>
+          <DialogContent className="sm:max-w-[425px]">
+            <DialogHeader>
+              <DialogTitle>Demande d'information</DialogTitle>
+            </DialogHeader>
+            <Form {...form}>
+              <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-4">
+                <FormField
+                  control={form.control}
+                  name="name"
+                  render={({ field }) => (
+                    <FormItem>
+                      <FormLabel>Nom</FormLabel>
+                      <FormControl>
+                        <Input placeholder="Votre nom" {...field} />
+                      </FormControl>
+                      <FormMessage />
+                    </FormItem>
+                  )}
+                />
+                <FormField
+                  control={form.control}
+                  name="email"
+                  render={({ field }) => (
+                    <FormItem>
+                      <FormLabel>Email</FormLabel>
+                      <FormControl>
+                        <Input placeholder="votre@email.com" type="email" {...field} />
+                      </FormControl>
+                      <FormMessage />
+                    </FormItem>
+                  )}
+                />
+                <FormField
+                  control={form.control}
+                  name="phone"
+                  render={({ field }) => (
+                    <FormItem>
+                      <FormLabel>Téléphone (optionnel)</FormLabel>
+                      <FormControl>
+                        <Input placeholder="Votre numéro" {...field} />
+                      </FormControl>
+                      <FormMessage />
+                    </FormItem>
+                  )}
+                />
+                <FormField
+                  control={form.control}
+                  name="product"
+                  render={({ field }) => (
+                    <FormItem>
+                      <FormLabel>Produit d'intérêt</FormLabel>
+                      <Select onValueChange={field.onChange} defaultValue={field.value}>
+                        <FormControl>
+                          <SelectTrigger>
+                            <SelectValue placeholder="Sélectionnez un produit" />
+                          </SelectTrigger>
+                        </FormControl>
+                        <SelectContent>
+                          {files.map((file, index) => (
+                            <SelectItem key={index} value={file.name}>
+                              {file.name.replace('.png', '')}
+                            </SelectItem>
+                          ))}
+                        </SelectContent>
+                      </Select>
+                      <FormMessage />
+                    </FormItem>
+                  )}
+                />
+                <Button 
+                  type="submit" 
+                  className="w-full"
+                  disabled={isSubmitting}
+                >
+                  {isSubmitting ? "Envoi en cours..." : "Envoyer ma demande"}
+                </Button>
+              </form>
+            </Form>
+          </DialogContent>
+        </Dialog>
       </div>
 
       {/* Footer avec mentions légales */}
