@@ -13,14 +13,17 @@ export type Database = {
         Row: {
           description: string | null
           numero_fiche: string | null
+          "Primary Key": number
         }
         Insert: {
           description?: string | null
           numero_fiche?: string | null
+          "Primary Key"?: number
         }
         Update: {
           description?: string | null
           numero_fiche?: string | null
+          "Primary Key"?: number
         }
         Relationships: []
       }
@@ -29,6 +32,7 @@ export type Database = {
           description: string | null
           "numero photo": string | null
           numero_fiche: string | null
+          "Primary Key": number
           reference: string | null
           url: string | null
         }
@@ -36,6 +40,7 @@ export type Database = {
           description?: string | null
           "numero photo"?: string | null
           numero_fiche?: string | null
+          "Primary Key"?: number
           reference?: string | null
           url?: string | null
         }
@@ -43,6 +48,7 @@ export type Database = {
           description?: string | null
           "numero photo"?: string | null
           numero_fiche?: string | null
+          "Primary Key"?: number
           reference?: string | null
           url?: string | null
         }
