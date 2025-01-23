@@ -21,6 +21,12 @@ const ProductCard = ({ imageUrl, fileName }: ProductCardProps) => {
           error={error}
         />
       </div>
+
+      <div className="w-full bg-highlight rounded p-3 text-center">
+        <p className="text-sm font-medium text-white">
+          Nouvelle cartouche
+        </p>
+      </div>
     </div>
   );
 };
