@@ -6,10 +6,16 @@ interface ProductCardProps {
   fileName?: string;
 }
 
+interface ProductInfo {
+  reference?: string;
+  description?: string;
+}
+
 const ProductCard = ({ imageUrl, fileName }: ProductCardProps) => {
   const [ficheProduitUrl, setFicheProduitUrl] = useState<string | null>(null);
   const [isLoading, setIsLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
+  const [productInfo, setProductInfo] = useState<ProductInfo | null>(null);
 
   useEffect(() => {
     const fetchProductInfo = async () => {
@@ -21,6 +27,18 @@ const ProductCard = ({ imageUrl, fileName }: ProductCardProps) => {
       try {
         // Extract the product number from the filename (removing .png extension)
         const numeroFiche = fileName.replace('.png', '');
+
+        // Get product info from urls_associes table
+        const { data: productData, error: productError } = await supabase
+          .from('urls_associes')
+          .select('reference, description')
+          .eq('numero_fiche', numeroFiche)
+          .single();
+
+        if (productError) throw productError;
+        if (productData) {
+          setProductInfo(productData);
+        }
 
         // Get the PNG URL from the 'fiches produits' bucket
         const { data: publicUrl } = supabase
@@ -59,6 +77,33 @@ const ProductCard = ({ imageUrl, fileName }: ProductCardProps) => {
           <div className="w-full h-full bg-industrial-800 flex items-center justify-center text-gray-400">
             Produit
           </div>
+        )}
+      </div>
+      
+      {/* Product Info Cartridge */}
+      <div className="w-full bg-industrial-600 rounded p-3 space-y-2">
+        {isLoading ? (
+          <div className="space-y-2">
+            <div className="h-4 bg-industrial-500 animate-pulse rounded"></div>
+            <div className="h-4 bg-industrial-500 animate-pulse rounded w-3/4"></div>
+          </div>
+        ) : productInfo ? (
+          <>
+            {productInfo.reference && (
+              <p className="text-sm font-medium text-gray-300">
+                Réf: {productInfo.reference}
+              </p>
+            )}
+            {productInfo.description && (
+              <p className="text-xs text-gray-400">
+                {productInfo.description}
+              </p>
+            )}
+          </>
+        ) : (
+          <p className="text-sm text-gray-400 text-center">
+            Information produit non disponible
+          </p>
         )}
       </div>
       
