@@ -8,7 +8,7 @@ interface ProductCardProps {
 }
 
 const ProductCard = ({ imageUrl, fileName }: ProductCardProps) => {
-  const { ficheProduitUrl, isLoading, error } = useProductInfo(fileName);
+  const { ficheProduitUrl, description, isLoading, error } = useProductInfo(fileName);
 
   return (
     <div className="product-card bg-industrial-700 rounded-lg p-4 flex flex-col items-center justify-center gap-4">
@@ -24,7 +24,7 @@ const ProductCard = ({ imageUrl, fileName }: ProductCardProps) => {
 
       <div className="w-full bg-[#ea384c] rounded-full p-3 text-center shadow-lg">
         <p className="text-sm font-bold text-black">
-          Nouvelle cartouche
+          {isLoading ? 'Chargement...' : description || 'Nouvelle cartouche'}
         </p>
       </div>
     </div>
