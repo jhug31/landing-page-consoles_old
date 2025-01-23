@@ -15,7 +15,7 @@ const ProductCard = ({ imageUrl, fileName }: ProductCardProps) => {
       <ProductImage imageUrl={imageUrl} fileName={fileName} />
       
       {description && (
-        <div className="w-full px-4 py-3 bg-[#ea384c] rounded-lg text-center">
+        <div className="w-full py-2 px-4 bg-[#ea384c] rounded text-center flex items-center justify-center">
           <p className="text-black font-bold">
             {description}
           </p>
