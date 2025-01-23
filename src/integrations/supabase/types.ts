@@ -12,21 +12,21 @@ export type Database = {
       urls_associes: {
         Row: {
           description: string | null
-          "numero photo": number | null
+          "numero photo": string | null
           numero_fiche: string | null
           reference: string | null
           url: string | null
         }
         Insert: {
           description?: string | null
-          "numero photo"?: number | null
+          "numero photo"?: string | null
           numero_fiche?: string | null
           reference?: string | null
           url?: string | null
         }
         Update: {
           description?: string | null
-          "numero photo"?: number | null
+          "numero photo"?: string | null
           numero_fiche?: string | null
           reference?: string | null
           url?: string | null
