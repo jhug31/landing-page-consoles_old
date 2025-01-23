@@ -8,17 +8,11 @@ interface ProductCardProps {
 }
 
 const ProductCard = ({ imageUrl, fileName }: ProductCardProps) => {
-  const { ficheProduitUrl, description, isLoading, error } = useProductInfo(fileName);
+  const { ficheProduitUrl, isLoading, error } = useProductInfo(fileName);
 
   return (
     <div className="product-card bg-industrial-700 rounded-lg p-4 flex flex-col items-center justify-center gap-4">
       <ProductImage imageUrl={imageUrl} fileName={fileName} />
-
-      {description && (
-        <div className="w-full bg-[#ea384c] text-white p-2 rounded">
-          <p className="text-sm font-medium">{description}</p>
-        </div>
-      )}
 
       <div className="w-full">
         <ProductButton 

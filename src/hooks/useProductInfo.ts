@@ -3,7 +3,6 @@ import { supabase } from '@/integrations/supabase/client';
 
 export const useProductInfo = (fileName: string | undefined) => {
   const [ficheProduitUrl, setFicheProduitUrl] = useState<string | null>(null);
-  const [description, setDescription] = useState<string | null>(null);
   const [isLoading, setIsLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
 
@@ -17,21 +16,6 @@ export const useProductInfo = (fileName: string | undefined) => {
       try {
         const numeroFiche = fileName.replace('.png', '');
         console.log('🔍 Fetching product info for:', numeroFiche);
-
-        // Get the product description
-        const { data: descriptionData, error: descriptionError } = await supabase
-          .from('description')
-          .select('description')
-          .eq('numero_fiche', numeroFiche)
-          .maybeSingle();
-
-        if (descriptionError) {
-          console.error('❌ Error fetching description:', descriptionError);
-          setError('Erreur lors du chargement de la description');
-        } else {
-          console.log('📝 Description data:', descriptionData);
-          setDescription(descriptionData?.description || null);
-        }
 
         // Get the product file URL
         const { data: publicUrl } = supabase
@@ -55,5 +39,5 @@ export const useProductInfo = (fileName: string | undefined) => {
     fetchProductInfo();
   }, [fileName]);
 
-  return { ficheProduitUrl, description, isLoading, error };
+  return { ficheProduitUrl, isLoading, error };
 };
