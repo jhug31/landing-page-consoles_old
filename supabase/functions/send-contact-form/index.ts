@@ -12,7 +12,7 @@ interface ContactFormData {
   name: string;
   email: string;
   phone?: string;
-  product: string;
+  products: string[];
 }
 
 const handler = async (req: Request): Promise<Response> => {
@@ -31,7 +31,9 @@ const handler = async (req: Request): Promise<Response> => {
       Nom : ${formData.name}
       Email : ${formData.email}
       Téléphone : ${formData.phone || 'Non renseigné'}
-      Produit d'intérêt : ${formData.product}
+      
+      Produits d'intérêt :
+      ${formData.products.map(product => `- ${product}`).join('\n')}
     `;
 
     const res = await fetch("https://api.brevo.com/v3/smtp/email", {
