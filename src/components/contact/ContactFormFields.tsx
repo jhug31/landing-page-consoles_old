@@ -12,7 +12,7 @@ const formSchema = z.object({
   name: z.string().min(2, "Le nom doit contenir au moins 2 caractères"),
   email: z.string().email("Adresse email invalide"),
   phone: z.string().optional(),
-  product: z.string().min(1, "Veuillez sélectionner un produit"),
+  products: z.array(z.string()).min(1, "Veuillez sélectionner au moins un produit"),
 });
 
 interface ContactFormFieldsProps {
@@ -30,7 +30,7 @@ const ContactFormFields = ({ files, onSubmit, isSubmitting }: ContactFormFieldsP
       name: "",
       email: "",
       phone: "",
-      product: "",
+      products: [],
     },
   });
 
