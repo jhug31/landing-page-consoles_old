@@ -15,7 +15,7 @@ const ProductCard = ({ imageUrl, fileName }: ProductCardProps) => {
       <ProductImage imageUrl={imageUrl} fileName={fileName} />
 
       {description && (
-        <div className="w-full bg-[#ea384c] text-black p-2 rounded">
+        <div className="w-full bg-[#ea384c] text-white p-2 rounded">
           <p className="text-sm font-medium">{description}</p>
         </div>
       )}

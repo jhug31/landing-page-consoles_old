@@ -30,9 +30,7 @@ export const useProductInfo = (fileName: string | undefined) => {
           setError('Erreur lors du chargement de la description');
         } else {
           console.log('📝 Description data:', descriptionData);
-          if (descriptionData) {
-            setDescription(descriptionData.description);
-          }
+          setDescription(descriptionData?.description || null);
         }
 
         // Get the product file URL
