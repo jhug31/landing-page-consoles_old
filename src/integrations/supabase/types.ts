@@ -24,6 +24,21 @@ export type Database = {
         }
         Relationships: []
       }
+      description_old: {
+        Row: {
+          description: string | null
+          numero_fiche: string | null
+        }
+        Insert: {
+          description?: string | null
+          numero_fiche?: string | null
+        }
+        Update: {
+          description?: string | null
+          numero_fiche?: string | null
+        }
+        Relationships: []
+      }
       urls_associes: {
         Row: {
           description: string | null
@@ -50,19 +65,25 @@ export type Database = {
       }
       urls_associes_old: {
         Row: {
-          numero_fiche: string
-          "photo PNG": string | null
-          url: string
+          description: string | null
+          "numero photo": string | null
+          numero_fiche: string | null
+          reference: string | null
+          url: string | null
         }
         Insert: {
-          numero_fiche: string
-          "photo PNG"?: string | null
-          url: string
+          description?: string | null
+          "numero photo"?: string | null
+          numero_fiche?: string | null
+          reference?: string | null
+          url?: string | null
         }
         Update: {
-          numero_fiche?: string
-          "photo PNG"?: string | null
-          url?: string
+          description?: string | null
+          "numero photo"?: string | null
+          numero_fiche?: string | null
+          reference?: string | null
+          url?: string | null
         }
         Relationships: []
       }
