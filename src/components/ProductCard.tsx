@@ -8,6 +8,7 @@ interface ProductCardProps {
 
 const ProductCard = ({ imageUrl, fileName }: ProductCardProps) => {
   const [ficheProduitUrl, setFicheProduitUrl] = useState<string | null>(null);
+  const [description, setDescription] = useState<string | null>(null);
   const [isLoading, setIsLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
 
@@ -31,6 +32,20 @@ const ProductCard = ({ imageUrl, fileName }: ProductCardProps) => {
         if (publicUrl) {
           setFicheProduitUrl(publicUrl.publicUrl);
         }
+
+        // Fetch the description from the database
+        const { data: descriptionData, error: descriptionError } = await supabase
+          .from('description')
+          .select('description')
+          .eq('numero_fiche', numeroFiche)
+          .single();
+
+        if (descriptionError) {
+          console.error('Error fetching description:', descriptionError);
+        } else if (descriptionData) {
+          setDescription(descriptionData.description);
+        }
+
       } catch (err) {
         console.error('Error fetching product info:', err);
         setError('Erreur lors du chargement des informations du produit');
@@ -62,6 +77,12 @@ const ProductCard = ({ imageUrl, fileName }: ProductCardProps) => {
         )}
       </div>
       
+      {description && (
+        <div className="w-full px-4 py-3 bg-industrial-600 rounded text-gray-300 text-sm">
+          {description}
+        </div>
+      )}
+
       <div className="w-full">
         {isLoading ? (
           <div className="h-10 bg-industrial-600 animate-pulse rounded"></div>
