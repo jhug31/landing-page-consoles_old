@@ -1,5 +1,6 @@
 import { useState, useEffect } from 'react';
 import { supabase } from '@/integrations/supabase/client';
+import { ExternalLink } from 'lucide-react';
 
 interface ProductCardProps {
   imageUrl?: string;
@@ -93,9 +94,10 @@ const ProductCard = ({ imageUrl, fileName }: ProductCardProps) => {
             href={ficheProduitUrl}
             target="_blank"
             rel="noopener noreferrer"
-            className="w-full block text-center py-2 px-4 bg-industrial-600 hover:bg-industrial-500 transition-colors rounded text-gray-300 text-sm"
+            className="w-full block text-center py-2 px-4 bg-industrial-600 hover:bg-industrial-500 transition-colors rounded text-gray-300 text-sm flex items-center justify-center gap-2"
           >
             Voir la fiche produit
+            <ExternalLink className="w-4 h-4" />
           </a>
         ) : (
           <div className="text-gray-500 text-sm text-center">
