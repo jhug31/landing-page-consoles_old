@@ -27,6 +27,8 @@ const ProductCard = ({ imageUrl, fileName }: ProductCardProps) => {
       try {
         // Extract the product number from the filename (removing .png extension)
         const numeroFiche = fileName.replace('.png', '');
+        
+        console.log('Fetching product info for numero_fiche:', numeroFiche);
 
         // Get product info from urls_associes table
         const { data: productData, error: productError } = await supabase
@@ -35,10 +37,17 @@ const ProductCard = ({ imageUrl, fileName }: ProductCardProps) => {
           .eq('numero_fiche', numeroFiche)
           .maybeSingle();
 
-        if (productError) throw productError;
+        if (productError) {
+          console.error('Error fetching product data:', productError);
+          throw productError;
+        }
+
+        console.log('Product data received:', productData);
 
         if (productData) {
           setProductInfo(productData);
+        } else {
+          console.log('No product data found for numero_fiche:', numeroFiche);
         }
 
         // Get the PNG URL from the 'fiches produits' bucket
