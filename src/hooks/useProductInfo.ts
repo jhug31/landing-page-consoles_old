@@ -30,12 +30,12 @@ export const useProductInfo = (fileName: string | undefined) => {
           .from('description')
           .select('description')
           .eq('numero_fiche', numeroFiche)
-          .single();
+          .maybeSingle();
 
         if (descriptionError) {
           console.error('Error fetching description:', descriptionError);
-        } else if (descriptionData) {
-          setDescription(descriptionData.description);
+        } else {
+          setDescription(descriptionData?.description ?? null);
         }
 
       } catch (err) {
