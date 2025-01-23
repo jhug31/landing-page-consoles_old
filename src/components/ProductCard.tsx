@@ -13,16 +13,6 @@ const ProductCard = ({ imageUrl, fileName }: ProductCardProps) => {
   return (
     <div className="product-card bg-industrial-700 rounded-lg p-4 flex flex-col items-center justify-center gap-4">
       <ProductImage imageUrl={imageUrl} fileName={fileName} />
-      
-      {description && (
-        <div className="w-full">
-          <div className="w-full px-6 py-3 bg-[#ea384c] rounded-full text-center">
-            <p className="text-black font-bold">
-              {description}
-            </p>
-          </div>
-        </div>
-      )}
 
       <div className="w-full">
         <ProductButton 
