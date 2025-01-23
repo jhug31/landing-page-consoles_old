@@ -7,8 +7,6 @@ interface ProductInfoProps {
 }
 
 const ProductInfo = ({ isLoading, reference, description }: ProductInfoProps) => {
-  console.log('ProductInfo rendering with:', { isLoading, reference, description });
-
   if (isLoading) {
     return (
       <div className="space-y-2">
@@ -18,22 +16,17 @@ const ProductInfo = ({ isLoading, reference, description }: ProductInfoProps) =>
     );
   }
 
-  if (!reference && !description) {
-    console.log('No reference and no description available');
-    return (
-      <p className="text-gray-500 text-sm text-center">
-        Informations non disponibles
-      </p>
-    );
-  }
-
   return (
     <div className="space-y-1 text-sm">
-      {reference && (
+      {reference ? (
         <p className="text-gray-300 font-medium">{reference}</p>
+      ) : (
+        <p className="text-gray-500">Référence non disponible</p>
       )}
-      {description && (
+      {description ? (
         <p className="text-gray-400">{description}</p>
+      ) : (
+        <p className="text-gray-500">Description non disponible</p>
       )}
     </div>
   );

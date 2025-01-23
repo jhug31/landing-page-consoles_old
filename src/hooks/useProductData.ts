@@ -21,7 +21,7 @@ export const useProductData = (fileName?: string) => {
       }
 
       try {
-        // Nettoyer le numéro de fiche en enlevant l'extension .png et les espaces
+        // Clean the file number by removing .png and spaces
         const numeroFiche = fileName.replace('.png', '').trim();
         console.log('Fetching product info for numero_fiche:', numeroFiche);
 
@@ -39,29 +39,24 @@ export const useProductData = (fileName?: string) => {
         console.log('Raw product data received:', productData);
 
         if (productData) {
-          console.log('Setting product info:', productData);
           setProductInfo({
             reference: productData.reference,
             description: productData.description,
             url: productData.url
           });
-          // Utiliser l'URL de la base de données si disponible
-          if (productData.url) {
-            setFicheProduitUrl(productData.url);
-          } else {
-            // Fallback vers l'URL du stockage Supabase si pas d'URL dans la base
-            const { data: publicUrl } = supabase
-              .storage
-              .from('fiches produits')
-              .getPublicUrl(`${numeroFiche}.png`);
-            
-            if (publicUrl) {
-              setFicheProduitUrl(publicUrl.publicUrl);
-            }
-          }
+          setFicheProduitUrl(productData.url || null);
         } else {
           console.log('No product data found for numero_fiche:', numeroFiche);
           setProductInfo(null);
+          // Try to get URL from storage if no database URL
+          const { data: publicUrl } = supabase
+            .storage
+            .from('fiches produits')
+            .getPublicUrl(`${numeroFiche}.png`);
+          
+          if (publicUrl) {
+            setFicheProduitUrl(publicUrl.publicUrl);
+          }
         }
       } catch (err) {
         console.error('Error in fetchProductInfo:', err);
