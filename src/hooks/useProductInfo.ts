@@ -15,8 +15,8 @@ export const useProductInfo = (fileName: string | undefined) => {
       }
 
       try {
-        console.log('🔍 Fetching product info for:', fileName);
         const numeroFiche = fileName.replace('.png', '');
+        console.log('🔍 Fetching product info for:', numeroFiche);
 
         // Get the product description
         const { data: descriptionData, error: descriptionError } = await supabase
@@ -30,7 +30,9 @@ export const useProductInfo = (fileName: string | undefined) => {
           setError('Erreur lors du chargement de la description');
         } else {
           console.log('📝 Description data:', descriptionData);
-          setDescription(descriptionData?.description ?? null);
+          if (descriptionData) {
+            setDescription(descriptionData.description);
+          }
         }
 
         // Get the product file URL
