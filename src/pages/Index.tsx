@@ -110,7 +110,7 @@ const Index = () => {
         <Dialog open={isDialogOpen} onOpenChange={setIsDialogOpen}>
           <DialogTrigger asChild>
             <Button
-              className="bg-white hover:bg-white/90 text-[#222222] font-bold px-6 py-6 rounded-full shadow-lg transition-all duration-300 hover:scale-105"
+              className="bg-white hover:bg-white/90 text-[#222222] font-bold px-8 py-8 rounded-full shadow-lg transition-all duration-300 hover:scale-105"
             >
               Demandez une offre
             </Button>
