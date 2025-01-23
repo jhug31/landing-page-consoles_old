@@ -15,10 +15,12 @@ const ProductCard = ({ imageUrl, fileName }: ProductCardProps) => {
       <ProductImage imageUrl={imageUrl} fileName={fileName} />
       
       {description && (
-        <div className="w-full px-4 py-3 bg-[#ea384c] rounded-lg text-center">
-          <p className="text-black font-bold">
-            {description}
-          </p>
+        <div className="w-full">
+          <div className="w-full px-6 py-3 bg-[#ea384c] rounded-full text-center">
+            <p className="text-black font-bold">
+              {description}
+            </p>
+          </div>
         </div>
       )}
 
