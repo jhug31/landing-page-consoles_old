@@ -36,9 +36,15 @@ export const useProductData = (fileName?: string) => {
           throw productError;
         }
 
-        console.log('Raw product data received:', productData);
+        console.log('Product data received:', productData);
 
         if (productData) {
+          console.log('Setting product info:', {
+            reference: productData.reference,
+            description: productData.description,
+            url: productData.url
+          });
+          
           setProductInfo({
             reference: productData.reference,
             description: productData.description,
