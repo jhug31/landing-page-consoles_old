@@ -5,6 +5,7 @@ import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from "
 import { Input } from "@/components/ui/input";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { Button } from "@/components/ui/button";
+import { useProductInfo } from "@/hooks/useProductInfo";
 
 const formSchema = z.object({
   name: z.string().min(2, "Le nom doit contenir au moins 2 caractères"),
@@ -87,11 +88,14 @@ const ContactFormFields = ({ files, onSubmit, isSubmitting }: ContactFormFieldsP
                   </SelectTrigger>
                 </FormControl>
                 <SelectContent>
-                  {files.map((file, index) => (
-                    <SelectItem key={index} value={file.name}>
-                      {file.name.replace('.png', '')}
-                    </SelectItem>
-                  ))}
+                  {files.map((file, index) => {
+                    const { description } = useProductInfo(file.name);
+                    return (
+                      <SelectItem key={index} value={file.name}>
+                        {description || "Nouvelle cartouche"}
+                      </SelectItem>
+                    );
+                  })}
                 </SelectContent>
               </Select>
               <FormMessage />
