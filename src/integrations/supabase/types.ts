@@ -11,30 +11,6 @@ export type Database = {
     Tables: {
       urls_associes: {
         Row: {
-          description: string | null
-          "numero photo": number | null
-          numero_fiche: number | null
-          reference: string | null
-          url: string | null
-        }
-        Insert: {
-          description?: string | null
-          "numero photo"?: number | null
-          numero_fiche?: number | null
-          reference?: string | null
-          url?: string | null
-        }
-        Update: {
-          description?: string | null
-          "numero photo"?: number | null
-          numero_fiche?: number | null
-          reference?: string | null
-          url?: string | null
-        }
-        Relationships: []
-      }
-      urls_associes_old: {
-        Row: {
           numero_fiche: string
           "photo PNG": string | null
           url: string
