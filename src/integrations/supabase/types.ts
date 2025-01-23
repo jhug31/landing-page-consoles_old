@@ -13,21 +13,21 @@ export type Database = {
         Row: {
           description: string | null
           "numero photo": number | null
-          numero_fiche: number | null
+          numero_fiche: string | null
           reference: string | null
           url: string | null
         }
         Insert: {
           description?: string | null
           "numero photo"?: number | null
-          numero_fiche?: number | null
+          numero_fiche?: string | null
           reference?: string | null
           url?: string | null
         }
         Update: {
           description?: string | null
           "numero photo"?: number | null
-          numero_fiche?: number | null
+          numero_fiche?: string | null
           reference?: string | null
           url?: string | null
         }
