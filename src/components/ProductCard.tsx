@@ -9,7 +9,7 @@ interface ProductCardProps {
 }
 
 const ProductCard = ({ imageUrl, fileName }: ProductCardProps) => {
-  const { ficheProduitUrl, isLoading, error } = useProductData(fileName);
+  const { ficheProduitUrl, description, isLoading, error } = useProductData(fileName);
 
   return (
     <div className="product-card bg-industrial-700 rounded-lg p-4 flex flex-col items-center justify-center gap-4">
@@ -24,9 +24,15 @@ const ProductCard = ({ imageUrl, fileName }: ProductCardProps) => {
       </div>
 
       <div className="w-full bg-industrial-600 p-3 rounded">
-        <p className="text-sm text-gray-400">
-          Contactez-nous pour plus d'informations sur ce produit
-        </p>
+        {isLoading ? (
+          <div className="h-4 bg-industrial-500 animate-pulse rounded"></div>
+        ) : description ? (
+          <p className="text-sm text-gray-400">{description}</p>
+        ) : (
+          <p className="text-sm text-gray-400">
+            Contactez-nous pour plus d'informations sur ce produit
+          </p>
+        )}
       </div>
     </div>
   );

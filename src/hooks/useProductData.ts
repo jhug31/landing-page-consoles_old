@@ -10,6 +10,7 @@ interface ProductInfo {
 export const useProductData = (fileName?: string) => {
   const [ficheProduitUrl, setFicheProduitUrl] = useState<string | null>(null);
   const [productInfo, setProductInfo] = useState<ProductInfo | null>(null);
+  const [description, setDescription] = useState<string | null>(null);
   const [isLoading, setIsLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
 
@@ -25,6 +26,7 @@ export const useProductData = (fileName?: string) => {
         const numeroFiche = fileName.replace('.png', '').trim();
         console.log('Fetching product info for numero_fiche:', numeroFiche);
 
+        // Fetch from urls_associes
         const { data: productData, error: productError } = await supabase
           .from('urls_associes')
           .select('reference, description, url')
@@ -36,15 +38,22 @@ export const useProductData = (fileName?: string) => {
           throw productError;
         }
 
+        // Fetch from description table
+        const { data: descriptionData, error: descriptionError } = await supabase
+          .from('description')
+          .select('description')
+          .eq('numero_fiche', numeroFiche)
+          .maybeSingle();
+
+        if (descriptionError) {
+          console.error('Error fetching description:', descriptionError);
+          throw descriptionError;
+        }
+
         console.log('Product data received:', productData);
+        console.log('Description data received:', descriptionData);
 
         if (productData) {
-          console.log('Setting product info:', {
-            reference: productData.reference,
-            description: productData.description,
-            url: productData.url
-          });
-          
           setProductInfo({
             reference: productData.reference,
             description: productData.description,
@@ -64,6 +73,12 @@ export const useProductData = (fileName?: string) => {
             setFicheProduitUrl(publicUrl.publicUrl);
           }
         }
+
+        // Set description from the description table if available
+        if (descriptionData) {
+          setDescription(descriptionData.description);
+        }
+
       } catch (err) {
         console.error('Error in fetchProductInfo:', err);
         setError('Erreur lors du chargement des informations du produit');
@@ -75,5 +90,5 @@ export const useProductData = (fileName?: string) => {
     fetchProductInfo();
   }, [fileName]);
 
-  return { ficheProduitUrl, productInfo, isLoading, error };
+  return { ficheProduitUrl, productInfo, description, isLoading, error };
 };

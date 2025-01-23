@@ -9,6 +9,21 @@ export type Json =
 export type Database = {
   public: {
     Tables: {
+      description: {
+        Row: {
+          description: string | null
+          numero_fiche: string | null
+        }
+        Insert: {
+          description?: string | null
+          numero_fiche?: string | null
+        }
+        Update: {
+          description?: string | null
+          numero_fiche?: string | null
+        }
+        Relationships: []
+      }
       urls_associes: {
         Row: {
           description: string | null
