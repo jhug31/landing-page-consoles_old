@@ -22,6 +22,12 @@ const ProductCard = ({ imageUrl, fileName }: ProductCardProps) => {
           ficheProduitUrl={ficheProduitUrl}
         />
       </div>
+
+      <div className="w-full bg-industrial-600 p-3 rounded">
+        <p className="text-sm text-gray-400">
+          Contactez-nous pour plus d'informations sur ce produit
+        </p>
+      </div>
     </div>
   );
 };
