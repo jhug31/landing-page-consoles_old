@@ -68,7 +68,7 @@ const ContactForm = ({ files }: ContactFormProps) => {
       <Dialog open={isDialogOpen} onOpenChange={setIsDialogOpen}>
         <DialogTrigger asChild>
           <Button
-            className="bg-[#ea384c] hover:bg-[#ea384c]/90 text-white font-bold px-8 py-8 rounded-full shadow-lg transition-all duration-300 hover:scale-105 text-lg"
+            className="bg-[#ea384c] hover:bg-[#ea384c]/90 text-foreground font-bold px-8 py-8 rounded-full shadow-lg transition-all duration-300 hover:scale-105 text-lg"
           >
             Demandez une offre
           </Button>
