@@ -22,8 +22,8 @@ const ProductCard = ({ imageUrl, fileName }: ProductCardProps) => {
         />
       </div>
 
-      <div className="w-full bg-highlight rounded p-3 text-center">
-        <p className="text-sm font-medium text-white">
+      <div className="w-full bg-[#ea384c] rounded-full p-3 text-center shadow-lg">
+        <p className="text-sm font-bold text-black">
           Nouvelle cartouche
         </p>
       </div>
