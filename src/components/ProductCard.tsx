@@ -13,9 +13,9 @@ interface ProductInfo {
 
 const ProductCard = ({ imageUrl, fileName }: ProductCardProps) => {
   const [ficheProduitUrl, setFicheProduitUrl] = useState<string | null>(null);
+  const [productInfo, setProductInfo] = useState<ProductInfo | null>(null);
   const [isLoading, setIsLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
-  const [productInfo, setProductInfo] = useState<ProductInfo | null>(null);
 
   useEffect(() => {
     const fetchProductInfo = async () => {
@@ -28,18 +28,6 @@ const ProductCard = ({ imageUrl, fileName }: ProductCardProps) => {
         // Extract the product number from the filename (removing .png extension)
         const numeroFiche = fileName.replace('.png', '');
 
-        // Get product info from urls_associes table
-        const { data: productData, error: productError } = await supabase
-          .from('urls_associes')
-          .select('reference, description')
-          .eq('numero_fiche', numeroFiche)
-          .single();
-
-        if (productError) throw productError;
-        if (productData) {
-          setProductInfo(productData);
-        }
-
         // Get the PNG URL from the 'fiches produits' bucket
         const { data: publicUrl } = supabase
           .storage
@@ -49,6 +37,22 @@ const ProductCard = ({ imageUrl, fileName }: ProductCardProps) => {
         if (publicUrl) {
           setFicheProduitUrl(publicUrl.publicUrl);
         }
+
+        // Fetch product info from urls_associes table
+        const { data: productData, error: dbError } = await supabase
+          .from('urls_associes')
+          .select('reference, description')
+          .eq('numero_fiche', numeroFiche)
+          .single();
+
+        if (dbError) {
+          throw dbError;
+        }
+
+        if (productData) {
+          setProductInfo(productData);
+        }
+
       } catch (err) {
         console.error('Error fetching product info:', err);
         setError('Erreur lors du chargement des informations du produit');
@@ -79,30 +83,30 @@ const ProductCard = ({ imageUrl, fileName }: ProductCardProps) => {
           </div>
         )}
       </div>
-      
-      {/* Product Info Cartridge */}
-      <div className="w-full bg-industrial-600 rounded p-3 space-y-2">
+
+      {/* Nouvelle cartouche avec les informations du produit */}
+      <div className="w-full bg-industrial-600 p-3 rounded">
         {isLoading ? (
           <div className="space-y-2">
             <div className="h-4 bg-industrial-500 animate-pulse rounded"></div>
             <div className="h-4 bg-industrial-500 animate-pulse rounded w-3/4"></div>
           </div>
         ) : productInfo ? (
-          <>
+          <div className="space-y-1 text-left">
             {productInfo.reference && (
               <p className="text-sm font-medium text-gray-300">
                 Réf: {productInfo.reference}
               </p>
             )}
             {productInfo.description && (
-              <p className="text-xs text-gray-400">
+              <p className="text-xs text-gray-400 line-clamp-2">
                 {productInfo.description}
               </p>
             )}
-          </>
+          </div>
         ) : (
           <p className="text-sm text-gray-400 text-center">
-            Information produit non disponible
+            Aucune information disponible
           </p>
         )}
       </div>
