@@ -20,7 +20,8 @@ export const useProductData = (fileName?: string) => {
       }
 
       try {
-        const numeroFiche = fileName.replace('.png', '');
+        // Nettoyer le numéro de fiche en enlevant l'extension .png et les espaces
+        const numeroFiche = fileName.replace('.png', '').trim();
         console.log('Fetching product info for numero_fiche:', numeroFiche);
 
         const { data: productData, error: productError } = await supabase
@@ -34,12 +35,20 @@ export const useProductData = (fileName?: string) => {
           throw productError;
         }
 
-        console.log('Product data received:', productData);
+        console.log('Raw product data received:', productData);
 
         if (productData) {
-          setProductInfo(productData);
+          console.log('Setting product info:', {
+            reference: productData.reference,
+            description: productData.description
+          });
+          setProductInfo({
+            reference: productData.reference,
+            description: productData.description
+          });
         } else {
           console.log('No product data found for numero_fiche:', numeroFiche);
+          setProductInfo(null);
         }
 
         const { data: publicUrl } = supabase
@@ -51,7 +60,7 @@ export const useProductData = (fileName?: string) => {
           setFicheProduitUrl(publicUrl.publicUrl);
         }
       } catch (err) {
-        console.error('Error fetching product info:', err);
+        console.error('Error in fetchProductInfo:', err);
         setError('Erreur lors du chargement des informations du produit');
       } finally {
         setIsLoading(false);
