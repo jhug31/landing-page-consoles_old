@@ -4,6 +4,7 @@ import { supabase } from '@/integrations/supabase/client';
 interface ProductInfo {
   reference: string | null;
   description: string | null;
+  url: string | null;
 }
 
 export const useProductData = (fileName?: string) => {
@@ -26,7 +27,7 @@ export const useProductData = (fileName?: string) => {
 
         const { data: productData, error: productError } = await supabase
           .from('urls_associes')
-          .select('reference, description')
+          .select('reference, description, url')
           .eq('numero_fiche', numeroFiche)
           .maybeSingle();
 
@@ -38,26 +39,29 @@ export const useProductData = (fileName?: string) => {
         console.log('Raw product data received:', productData);
 
         if (productData) {
-          console.log('Setting product info:', {
-            reference: productData.reference,
-            description: productData.description
-          });
+          console.log('Setting product info:', productData);
           setProductInfo({
             reference: productData.reference,
-            description: productData.description
+            description: productData.description,
+            url: productData.url
           });
+          // Utiliser l'URL de la base de données si disponible
+          if (productData.url) {
+            setFicheProduitUrl(productData.url);
+          } else {
+            // Fallback vers l'URL du stockage Supabase si pas d'URL dans la base
+            const { data: publicUrl } = supabase
+              .storage
+              .from('fiches produits')
+              .getPublicUrl(`${numeroFiche}.png`);
+            
+            if (publicUrl) {
+              setFicheProduitUrl(publicUrl.publicUrl);
+            }
+          }
         } else {
           console.log('No product data found for numero_fiche:', numeroFiche);
           setProductInfo(null);
-        }
-
-        const { data: publicUrl } = supabase
-          .storage
-          .from('fiches produits')
-          .getPublicUrl(`${numeroFiche}.png`);
-
-        if (publicUrl) {
-          setFicheProduitUrl(publicUrl.publicUrl);
         }
       } catch (err) {
         console.error('Error in fetchProductInfo:', err);
