@@ -37,7 +37,8 @@
 }
 
 .product-card {
-  @apply relative overflow-hidden transition-all duration-300;
+  /* @apply relative overflow-hidden transition-all duration-300; */
+  @apply relative transition-all duration-300;
 }
 
 .product-card:hover {
