@@ -1,3 +1,4 @@
+
 import { useState, useEffect } from 'react';
 import { supabase } from '@/integrations/supabase/client';
 
@@ -17,6 +18,24 @@ export const useStorageFiles = (bucketName: string) => {
     const fetchFiles = async () => {
       try {
         console.log(`🔍 Début de la récupération des fichiers du bucket "${bucketName}"...`);
+
+        // Récupérer le nombre de lignes dans la table 'description'
+        const { count: dbCount, error: countError } = await supabase
+          .from('description')
+          .select('*', { count: 'exact' });
+
+        if (countError) {
+          console.error('❌ Erreur lors du comptage des lignes dans la table:', countError);
+          if (isMounted) {
+            setError('Erreur lors du comptage des lignes dans la table');
+            setLoading(false);
+          }
+          return;
+        }
+
+        console.log(`📊 Nombre de lignes dans la table: ${dbCount}`);
+
+        // Récupérer les fichiers du bucket
         const { data: fileList, error: listError } = await supabase
           .storage
           .from(bucketName)
@@ -31,13 +50,18 @@ export const useStorageFiles = (bucketName: string) => {
           return;
         }
 
-        if (!fileList || fileList.length === 0) {
+        // Vérifier que le nombre de fichiers correspond au nombre de lignes
+        if (!fileList) {
           console.log("ℹ️ Aucun fichier trouvé dans le bucket");
           if (isMounted) {
             setFiles([]);
             setLoading(false);
           }
           return;
+        }
+
+        if (fileList.length !== dbCount) {
+          console.warn(`⚠️ Attention: Le nombre de fichiers (${fileList.length}) ne correspond pas au nombre de lignes dans la table (${dbCount})`);
         }
 
         console.log("📁 Liste des fichiers trouvés:", fileList.map(f => f.name));
@@ -63,7 +87,8 @@ export const useStorageFiles = (bucketName: string) => {
         console.log(`📊 Nombre final de fichiers: ${filesWithUrls.length}`);
         
         if (isMounted) {
-          setFiles(filesWithUrls);
+          // Ne garder que le nombre de fichiers correspondant au nombre de lignes dans la table
+          setFiles(filesWithUrls.slice(0, dbCount));
           setLoading(false);
         }
       } catch (error) {
