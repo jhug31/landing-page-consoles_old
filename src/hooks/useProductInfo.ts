@@ -19,33 +19,52 @@ export const useProductInfo = (fileName: string | undefined) => {
         const numeroFiche = fileName.replace('.png', '');
         console.log('🔍 Fetching product info for:', numeroFiche);
 
-        // On vérifie d'abord si le fichier existe dans la table urls_associes
-        const { data: urlData, error: urlError } = await supabase
-          .from('urls_associes')
-          .select('url')
-          .eq('numero_fiche', numeroFiche)
-          .maybeSingle();
+        // On vérifie d'abord si le fichier existe dans le bucket
+        const { data: fileList, error: listError } = await supabase
+          .storage
+          .from('fiches produits')
+          .list('', {
+            search: `${numeroFiche}.png`
+          });
 
-        if (urlError) {
-          console.error('❌ Error fetching URL from urls_associes:', urlError);
-          throw urlError;
+        if (listError) {
+          console.error('❌ Error listing files:', listError);
+          throw listError;
         }
 
-        // Si on trouve une URL dans la table urls_associes, on l'utilise
-        if (urlData && urlData.url) {
-          console.log('🔗 Found URL in database:', urlData.url);
-          setFicheProduitUrl(urlData.url);
-        } else {
-          // Sinon, on cherche dans le bucket de stockage
-          const { data: urlData } = supabase
-            .storage
-            .from('fiches produits')
-            .getPublicUrl(`${numeroFiche}.png`);
+        // Si le fichier existe dans le bucket
+        if (fileList && fileList.length > 0) {
+          console.log(`✅ File ${numeroFiche}.png found in bucket`);
+          // On vérifie s'il existe une URL alternative dans la table urls_associes
+          const { data: urlData, error: urlError } = await supabase
+            .from('urls_associes')
+            .select('url')
+            .eq('numero_fiche', numeroFiche)
+            .maybeSingle();
 
-          if (urlData) {
-            console.log('🔗 Generated storage URL:', urlData.publicUrl);
-            setFicheProduitUrl(urlData.publicUrl);
+          if (urlError) {
+            console.error('❌ Error fetching URL from urls_associes:', urlError);
+            throw urlError;
           }
+
+          // On utilise l'URL de la base de données si elle existe
+          if (urlData && urlData.url) {
+            console.log('🔗 Using URL from database:', urlData.url);
+            setFicheProduitUrl(urlData.url);
+          } else {
+            // Sinon, on génère l'URL du bucket
+            const { data: storageData } = supabase
+              .storage
+              .from('fiches produits')
+              .getPublicUrl(fileList[0].name);
+
+            console.log('🔗 Using storage URL:', storageData.publicUrl);
+            setFicheProduitUrl(storageData.publicUrl);
+          }
+        } else {
+          console.warn(`⚠️ File ${numeroFiche}.png not found in bucket`);
+          setFicheProduitUrl(null);
+          setError('Fichier non trouvé');
         }
 
         // Fetch the product description
