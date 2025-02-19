@@ -1,3 +1,4 @@
+
 import { useState, useEffect } from 'react';
 import { supabase } from '@/integrations/supabase/client';
 
@@ -18,15 +19,33 @@ export const useProductInfo = (fileName: string | undefined) => {
         const numeroFiche = fileName.replace('.png', '');
         console.log('🔍 Fetching product info for:', numeroFiche);
 
-        // Get the product file URL
-        const { data: publicUrl } = supabase
+        // Vérifier si le fichier existe dans le bucket avant de générer l'URL
+        const { data: fileExists, error: checkError } = await supabase
           .storage
           .from('fiches produits')
-          .getPublicUrl(`${numeroFiche}.png`);
+          .list('', {
+            search: `${numeroFiche}.png`
+          });
 
-        if (publicUrl) {
-          console.log('🔗 Product file URL:', publicUrl.publicUrl);
-          setFicheProduitUrl(publicUrl.publicUrl);
+        if (checkError) {
+          console.error('❌ Error checking file existence:', checkError);
+          throw checkError;
+        }
+
+        // Si le fichier existe, générer l'URL
+        if (fileExists && fileExists.length > 0) {
+          const { data: urlData } = supabase
+            .storage
+            .from('fiches produits')
+            .getPublicUrl(`${numeroFiche}.png`);
+
+          if (urlData) {
+            console.log('🔗 Product file URL:', urlData.publicUrl);
+            setFicheProduitUrl(urlData.publicUrl);
+          }
+        } else {
+          console.warn(`⚠️ No file found for ${numeroFiche}.png in bucket`);
+          setFicheProduitUrl(null);
         }
 
         // Fetch the product description
